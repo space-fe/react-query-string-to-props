@@ -5,32 +5,40 @@ Mapping query string from the path to Component state seamlessly.
 ```javascript
 import React from 'react'
 import queryToStateHOC from 'react-query-to-state'
+import { createBrowserHistory } from 'history'
 
-class MyComponent extends React.Component {
+class Searcher extends React.Component {
   handleChange = (event) => {
     const { updateQueryState } = this.props
-    updateQueryState({ name: event.target.value })
+    updateQueryState({ searchStr: event.target.value })
   }
 
   render () {
     const { query } = this.props
-    const { name } = query
+    const { searchStr } = query
 
     return (
       <div>
-        <span>{name}</span>
+        <span>{searchStr}</span>
         <input onChange={this.handleChange} />
       </div>
     )
   }
 }
 
-const configs = {
-  history,
-  initState,
-  validator,
-  isReplace
+const config = {
+  history: createBrowserHistory(),  // optional
+  initState: {
+    searchStr: ''
+  },
+  validator: {
+    searchStr: {
+      type: 'regexp',
+      value: /^abc/i
+    }
+  },
+  isReplace: true
 }
 
-export default queryToStateHOC(MyComponent, configs)
+export default queryToStateHOC(Searcher, config)
 ```
