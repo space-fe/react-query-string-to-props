@@ -10,24 +10,25 @@ const validateObject = (obj, defaultObj, validator) => {
 
   Object.entries(defaultValidator).forEach(([key, validates]) => {
     const keyValue = obj[key]
-    let isValid = true
+    const validResult = Array(validates.length).fill(true)
 
-    validates.forEach(({ type, value }) => {
+    validates.forEach(({ type, value }, index) => {
       switch (type) {
         case validateTypes.range:
-          isValid = value.includes(keyValue)
+          validResult[index] = value.includes(keyValue)
           break
         case validateTypes.regexp:
-          isValid = value.test(keyValue)
+          validResult[index] = value.test(keyValue)
           break
         case validateTypes.function:
-          isValid = value(keyValue)
+          validResult[index] = value(keyValue)
           break
         default:
       }
     })
 
-    result[key] = isValid ? obj[key] : defaultObj[key]
+    const hasInvalid = validResult.filter(item => !item).length
+    result[key] = hasInvalid ? defaultObj[key] : obj[key]
   })
 
   return result

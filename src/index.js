@@ -2,10 +2,12 @@ import React from 'react'
 import onRouteChangedHOC from 'react-onroutechanged'
 import queryString from 'query-string'
 import { createBrowserHistory } from 'history'
-import { validateObject, filterObjWithDefaultObj } from './utils'
+import { validateObject } from './utils/validate'
+import { filterObjWithDefaultObj } from './utils/objectUtil'
 
 const queryToStateHOC = (DecoratedComponent, config) => {
   const componentName = DecoratedComponent.displayName || DecoratedComponent.name || 'Component'
+  const isReactComponent = DecoratedComponent.prototype.isReactComponent
 
   const {
     initState,
@@ -37,14 +39,12 @@ const queryToStateHOC = (DecoratedComponent, config) => {
         ...patches
       }
 
-      const { pathname } = this.currentLocation
-
       const validatedState = validateObject(newState, initState, validator)
       const newQueryObj = Object.assign(this.__getCurrentQueryObj(), validatedState)
+      const queryStr = this.__getQueryStr(newQueryObj)
+      const { pathname } = this.currentLocation
 
-      const query = this.__getQueryStr(newQueryObj)
-      const newPath = `${pathname}${Object.keys(validatedState).length === 0 ? '' : `?${query}`}`
-
+      const newPath = `${pathname}${Object.keys(validatedState).length === 0 ? '' : `?${queryStr}`}`
       isReplace ? history.replace(newPath) : history.push(newPath)
 
       this.setState({ ...validatedState }, () => {
@@ -63,8 +63,14 @@ const queryToStateHOC = (DecoratedComponent, config) => {
     }
 
     render () {
+      const { ...props } = this.props
+
+      if (isReactComponent) {
+        props.ref = ref => { this.instanceRef = ref }
+      }
+
       return <DecoratedComponent
-        {...this.props}
+        {...props}
         {...this.state}
         updateQueryState={this.__updateState}
       />

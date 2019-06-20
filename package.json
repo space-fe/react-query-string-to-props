@@ -42,6 +42,10 @@
     }
   },
   "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
     "babel-eslint": "^10.0.2",
     "babel-jest": "^24.8.0",
     "enzyme": "^3.10.0",
@@ -57,7 +61,8 @@
     "jest-environment-enzyme": "^7.0.2",
     "jest-enzyme": "^7.0.2",
     "jest-in-case": "^1.0.2",
-    "pre-commit": "^1.2.2"
+    "pre-commit": "^1.2.2",
+    "react-dom": "^16.8.6"
   },
   "peerDependencies": {
     "react": "^16.8.6"
@@ -65,6 +70,7 @@
   "dependencies": {
     "history": "^4.9.0",
     "query-string": "^6.7.0",
+    "react": "^16.8.6",
     "react-onroutechanged": "^1.0.0-beta.1"
   }
 }
