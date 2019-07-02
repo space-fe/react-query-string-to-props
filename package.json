@@ -1,6 +1,6 @@
 {
   "name": "react-query-to-state",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Mapping query string from the path to Component state seamlessly.",
   "main": "es/index.js",
   "module": "es/index.js",

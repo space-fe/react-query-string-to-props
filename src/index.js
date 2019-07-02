@@ -86,7 +86,7 @@ const queryToStateHOC = (DecoratedComponent, config) => {
     }
   }
 
-  return onRouteChangedHOC(queryToStateComponent, true, false)
+  return onRouteChangedHOC(queryToStateComponent, { mounted: true, onlyPathname: false })
 }
 
 export default queryToStateHOC

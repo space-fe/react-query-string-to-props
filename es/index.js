@@ -323,7 +323,10 @@ var queryToStateHOC = function queryToStateHOC(DecoratedComponent, config) {
 
   _defineProperty(queryToStateComponent, "displayName", "QueryToState(".concat(componentName, ")"));
 
-  return onRouteChangedHOC(queryToStateComponent, true, false);
+  return onRouteChangedHOC(queryToStateComponent, {
+    mounted: true,
+    onlyPathname: false
+  });
 };
 
 export default queryToStateHOC;
