@@ -4,36 +4,30 @@ export const validateTypes = {
   function: 'function'
 }
 
+const validateMethods = {
+  [validateTypes.range]: (value, validatorVal) => validatorVal.includes(value),
+  [validateTypes.regexp]: (value, validatorVal) => validatorVal.test(value),
+  [validateTypes.function]: (value, validatorVal) => validatorVal(value)
+}
+
 const validateObject = (obj, defaultObj, validator) => {
   const result = { ...obj }
   const defaultValidator = { ...validator }
 
-  Object.entries(defaultValidator).forEach(([key, validates]) => {
+  Object.entries(defaultValidator).forEach(([key, validators]) => {
     const keyValue = obj[key]
-    const validResult = Array(validates.length).fill(true)
+    const validateResult = Array(validators.length).fill(true)
 
-    validates.forEach(({ type, value }, index) => {
-      switch (type) {
-        case validateTypes.range:
-          validResult[index] = value.includes(keyValue)
-          break
-        case validateTypes.regexp:
-          validResult[index] = value.test(keyValue)
-          break
-        case validateTypes.function:
-          validResult[index] = value(keyValue)
-          break
-        default:
-      }
+    validators.forEach(({ type, value: validatorVal }, index) => {
+      const validateMethod = validateMethods[type]
+      validateResult[index] = validateMethod ? validateMethod(keyValue, validatorVal) : false
     })
 
-    const hasInvalid = validResult.filter(item => !item).length
-    result[key] = hasInvalid ? defaultObj[key] : obj[key]
+    const hasInvalidValidation = validateResult.filter(item => !item).length
+    result[key] = hasInvalidValidation ? defaultObj[key] : obj[key]
   })
 
   return result
 }
 
-export {
-  validateObject
-}
+export { validateObject }

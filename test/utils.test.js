@@ -68,6 +68,24 @@ cases('test utils validateObject', opts => {
       ]
     },
     expectedResult: { tab: 'TAB1' }
+  },
+  {
+    name: 'Has invalid validator type',
+    obj: { tab: 'TAB2' },
+    defaultObj: { tab: 'TAB1' },
+    validator: {
+      tab: [
+        {
+          type: 'range',
+          value: ['TAB1', 'TAB2', 'TAB3']
+        },
+        {
+          type: 'test',
+          value: 123
+        }
+      ]
+    },
+    expectedResult: { tab: 'TAB1' }
   }
 ])
 
