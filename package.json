@@ -1,6 +1,6 @@
 {
   "name": "react-query-to-state",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Mapping query string from the path to Component state seamlessly.",
   "main": "index.js",
   "directories": {
@@ -17,7 +17,8 @@
     "release:major": "yarn build && yarn version --major && yarn publish && git push --follow-tags"
   },
   "pre-commit": [
-    "precommit-msg"
+    "precommit-msg",
+    "lint"
   ],
   "repository": {
     "type": "git",

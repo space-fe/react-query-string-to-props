@@ -85,7 +85,7 @@ cases('test queryToStateHOC', opts => {
       initState: {
         searchStr1: 'initstr1'
       },
-      validator: {
+      validatorMap: {
         searchStr1: [
           { type: 'regexp', value: /(\w)+/i }
         ]
@@ -109,7 +109,7 @@ cases('test queryToStateHOC', opts => {
       initState: {
         searchStr1: 'initstr1'
       },
-      validator: {
+      validatorMap: {
         searchStr1: [
           { type: 'regexp', value: /(\w)+/i }
         ]
@@ -136,7 +136,7 @@ cases('test queryToStateHOC', opts => {
       initState: {
         searchStr1: 'initstr1'
       },
-      validator: {
+      validatorMap: {
         searchStr1: [
           { type: 'regexp', value: /^test/i }
         ]
@@ -147,7 +147,7 @@ cases('test queryToStateHOC', opts => {
       initState: {
         searchStr2: 'initstr2'
       },
-      validator: {
+      validatorMap: {
         searchStr1: [
           { type: 'regexp', value: /^test/i }
         ]

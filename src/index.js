@@ -11,10 +11,11 @@ const queryToStateHOC = (DecoratedComponent, config) => {
 
   const {
     initState,
-    validator,
+    validatorMap,
     isReplace = true,
     history = createBrowserHistory()
   } = config
+
   const defaultState = { ...initState }
 
   class queryToStateComponent extends React.PureComponent {
@@ -52,7 +53,7 @@ const queryToStateHOC = (DecoratedComponent, config) => {
         ...patches
       }
 
-      const validatedState = validateObject(newState, initState, validator)
+      const validatedState = validateObject(newState, initState, validatorMap)
       this.__updateUrl(validatedState)
 
       this.setState({ ...validatedState }, () => {
@@ -66,7 +67,7 @@ const queryToStateHOC = (DecoratedComponent, config) => {
       const currentQueryObj = this.__getCurrentQueryObj()
       const filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState)
 
-      const validatedQueryObj = validateObject(filterQueryObj, initState, validator)
+      const validatedQueryObj = validateObject(filterQueryObj, initState, validatorMap)
       this.setState({ ...validatedQueryObj })
     }
 
