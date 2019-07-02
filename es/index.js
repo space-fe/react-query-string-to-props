@@ -269,7 +269,7 @@ var queryToStateHOC = function queryToStateHOC(DecoratedComponent, config) {
         var queryStr = _this.__getQueryStr(newQueryObj);
 
         var pathname = _this.currentLocation.pathname;
-        var newPath = "".concat(pathname).concat(queryStr ? '' : "?".concat(queryStr));
+        var newPath = "".concat(pathname).concat(queryStr ? "?".concat(queryStr) : '');
         isReplace ? history.replace(newPath) : history.push(newPath);
       });
 

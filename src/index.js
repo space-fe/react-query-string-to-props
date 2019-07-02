@@ -42,7 +42,7 @@ const queryToStateHOC = (DecoratedComponent, config) => {
 
       const queryStr = this.__getQueryStr(newQueryObj)
       const { pathname } = this.currentLocation
-      const newPath = `${pathname}${queryStr ? '' : `?${queryStr}`}`
+      const newPath = `${pathname}${queryStr ? `?${queryStr}` : ''}`
 
       isReplace ? history.replace(newPath) : history.push(newPath)
     }
