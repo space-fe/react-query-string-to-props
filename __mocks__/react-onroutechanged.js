@@ -1,4 +1,4 @@
-const onRouteChangedHOC = (Component, config) => {
+const onRouteChangedHOC = (Component) => {
   return Component
 }
 

@@ -2,10 +2,8 @@
   "name": "react-query-to-state",
   "version": "0.0.1",
   "description": "Mapping query string from the path to Component state seamlessly.",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
+  "main": "es/index.js",
+  "module": "es/index.js",
   "scripts": {
     "test": "jest --collectCoverage",
     "lint": "eslint src/**/*.+\\(js\\|ts\\)*\\(x\\)",
@@ -63,7 +61,9 @@
     "jest-enzyme": "^7.0.2",
     "jest-in-case": "^1.0.2",
     "pre-commit": "^1.2.2",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "rollup": "^1.16.3",
+    "rollup-plugin-babel": "^4.3.3"
   },
   "peerDependencies": {
     "react": "^16.8.6"
