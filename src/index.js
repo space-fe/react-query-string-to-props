@@ -33,6 +33,19 @@ const queryToStateHOC = (DecoratedComponent, config) => {
       return queryString.stringify(queryObj, { arrayFormat: 'comma' })
     }
 
+    __updateUrl = (validatedState) => {
+      const newQueryObj = {
+        ...this.__getCurrentQueryObj(),
+        ...validatedState
+      }
+
+      const queryStr = this.__getQueryStr(newQueryObj)
+      const { pathname } = this.currentLocation
+      const newPath = `${pathname}${queryStr ? '' : `?${queryStr}`}`
+
+      isReplace ? history.replace(newPath) : history.push(newPath)
+    }
+
     __updateState = (patches, callback) => {
       const newState = {
         ...this.state,
@@ -40,12 +53,7 @@ const queryToStateHOC = (DecoratedComponent, config) => {
       }
 
       const validatedState = validateObject(newState, initState, validator)
-      const newQueryObj = Object.assign(this.__getCurrentQueryObj(), validatedState)
-      const queryStr = this.__getQueryStr(newQueryObj)
-      const { pathname } = this.currentLocation
-
-      const newPath = `${pathname}${Object.keys(validatedState).length === 0 ? '' : `?${queryStr}`}`
-      isReplace ? history.replace(newPath) : history.push(newPath)
+      this.__updateUrl(validatedState)
 
       this.setState({ ...validatedState }, () => {
         callback && callback()

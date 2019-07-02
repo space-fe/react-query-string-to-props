@@ -10,7 +10,8 @@ const getLocation = (pathname, search) => {
   }
 }
 const l1 = getLocation('/page')
-const l2 = getLocation('/page', { searchStr: 'str1', searchStr2: 'str2', name: 'mo' })
+const l2 = getLocation('/page', { searchStr1: 'l2-str1', searchStr2: 'l2-str2' })
+const l3 = getLocation('/page', { searchStr1: 'l3-str1', searchStr2: 'l3-str2', name: 'momo' })
 
 cases('test queryToStateHOC', opts => {
   const { config1, config2, locationChangingPath, updates = [], expectedStates } = opts
@@ -18,37 +19,15 @@ cases('test queryToStateHOC', opts => {
   const [ expectedState1, expectedState2 ] = expectedStates
 
   class Searcher extends React.Component {
-    handleChange = (event) => {
-      const { updateQueryState } = this.props
-      updateQueryState({ searchStr1: event.target.value })
-    }
-
     render () {
       const { searchStr1 } = this.props
-
-      return (
-        <div>
-          <span>{searchStr1}</span>
-          <input onChange={this.handleChange} />
-        </div>
-      )
+      return <div>{searchStr1}</div>
     }
   }
 
   const FunctionalSearcher = (props) => {
-    const handleChange = (event) => {
-      const { updateQueryState } = props
-      updateQueryState({ searchStr2: event.target.value })
-    }
-
     const { searchStr2 } = props
-
-    return (
-      <div>
-        <span>{searchStr2}</span>
-        <input onChange={handleChange} />
-      </div>
-    )
+    return <div>{searchStr2}</div>
   }
 
   const SearcherQueryToStateComp = queryToStateHOC(Searcher, config1)
@@ -56,16 +35,10 @@ cases('test queryToStateHOC', opts => {
 
   class App extends React.Component {
     render () {
-      return (
-        <React.Fragment>
-          <SearcherQueryToStateComp
-            ref={ref => { this.qRef = ref }}
-          />
-          <FunctionalSearcherQueryToStateComp
-            ref={ref => { this.fRef = ref }}
-          />
-        </React.Fragment>
-      )
+      return <React.Fragment>
+        <SearcherQueryToStateComp ref={ref => { this.qRef = ref }} />
+        <FunctionalSearcherQueryToStateComp ref={ref => { this.fRef = ref }} />
+      </React.Fragment>
     }
   }
 
@@ -74,7 +47,7 @@ cases('test queryToStateHOC', opts => {
   const instance1 = instance.qRef
   const instance2 = instance.fRef
 
-  locationChangingPath.reduce((prevLocation, currLocation) => {
+  locationChangingPath && locationChangingPath.reduce((prevLocation, currLocation) => {
     instance1.handleRouteChanged(prevLocation, currLocation)
     instance2.handleRouteChanged(prevLocation, currLocation)
     return currLocation
@@ -103,13 +76,11 @@ cases('test queryToStateHOC', opts => {
     })
   }
 
-  console.log('mockFn1() => ', mockFn1())
-  console.log('mockFn2() => ', mockFn2())
   expect(result1).toEqual(expectedState1)
   expect(result2).toEqual(expectedState2)
 }, [
   {
-    name: 'When route changes',
+    name: 'When route changes, and no state updates',
     config1: {
       initState: {
         searchStr1: 'initstr1'
@@ -124,6 +95,19 @@ cases('test queryToStateHOC', opts => {
     config2: {
       initState: {
         searchStr2: 'initstr2'
+      }
+    },
+    locationChangingPath: [l1, l2],
+    expectedStates: [
+      { searchStr1: 'l2-str1' },
+      { searchStr2: 'l2-str2' }
+    ]
+  },
+  {
+    name: 'When state updates, and no route changes',
+    config1: {
+      initState: {
+        searchStr1: 'initstr1'
       },
       validator: {
         searchStr1: [
@@ -131,33 +115,9 @@ cases('test queryToStateHOC', opts => {
         ]
       }
     },
-    locationChangingPath: [l1, l2],
-    expectedStates: [
-      { searchStr1: 'initstr1' },
-      { searchStr2: 'str2' }
-    ]
-  },
-  {
-    name: 'When updates',
-    config1: {
-      initState: {
-        searchStr1: 'initstr1'
-      },
-      validator: {
-        searchStr1: [
-          { type: 'regexp', value: /(\w)+/i }
-        ]
-      },
-      isReplace: false
-    },
     config2: {
       initState: {
         searchStr2: 'initstr2'
-      },
-      validator: {
-        searchStr1: [
-          { type: 'regexp', value: /(\w)+/i }
-        ]
       }
     },
     locationChangingPath: [l1],
@@ -171,7 +131,7 @@ cases('test queryToStateHOC', opts => {
     ]
   },
   {
-    name: 'When updates',
+    name: 'When state updates, and route changes',
     config1: {
       initState: {
         searchStr1: 'initstr1'
@@ -202,5 +162,60 @@ cases('test queryToStateHOC', opts => {
       { searchStr1: 'initstr1' },
       { searchStr2: 'bbb' }
     ]
+  },
+  {
+    name: 'When location search string changes',
+    config1: {
+      initState: {
+        searchStr1: 'initstr1'
+      }
+    },
+    config2: {
+      initState: {
+        searchStr2: 'initstr2',
+        name: 'mo'
+      }
+    },
+    locationChangingPath: [l2, l3],
+    expectedStates: [
+      { searchStr1: 'l3-str1' },
+      { searchStr2: 'l3-str2', name: 'momo' }
+    ]
+  },
+  {
+    name: 'When there is no route changes',
+    config1: {
+      initState: {
+        searchStr1: 'initstr1'
+      }
+    },
+    config2: {
+      initState: {
+        searchStr2: 'initstr2'
+      }
+    },
+    expectedStates: [
+      { searchStr1: 'initstr1' },
+      { searchStr2: 'initstr2' }
+    ]
+  },
+  {
+    name: 'When there is no initState config',
+    config1: {},
+    config2: {
+      initState: {
+        searchStr2: 'initstr2'
+      }
+    },
+    expectedStates: [
+      {},
+      { searchStr2: 'initstr2' }
+    ]
+  },
+  {
+    name: 'When there is no query string in location',
+    config1: {},
+    config2: {},
+    expectedStates: [{}, {}]
   }
 ])
