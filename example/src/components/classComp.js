@@ -19,17 +19,32 @@ class Demo extends React.PureComponent {
     })
   }
 
-  changeArray = () => {
+  changeNumericArray = () => {
     this.props.updateQueryState({
-      arr: [
+      numericArr: [
         getRandomNum(10, 1),
         getRandomNum(20, 1)
       ]
     })
   }
 
+  changeStringArray = () => {
+    this.props.updateQueryState({
+      stringArr: [
+        String(getRandomNum(10, 1)),
+        String(getRandomNum(20, 1))
+      ]
+    })
+  }
+
+  changeBoolean = () => {
+    this.props.updateQueryState({
+      bool: !this.props.bool
+    })
+  }
+
   render () {
-    const { num, inputStr, arr } = this.props
+    const { num, inputStr, numericArr, stringArr, bool } = this.props
 
     return (
       <div>
@@ -42,8 +57,16 @@ class Demo extends React.PureComponent {
           <input onChange={this.changeString} />
         </div>
         <div>
-          <span>Array: {JSON.stringify(arr)}</span>
-          <button onClick={this.changeArray}>change array</button>
+          <span>Numeric Array: {JSON.stringify(numericArr)}, item type: {typeof numericArr[0]}</span>
+          <button onClick={this.changeNumericArray}>change array</button>
+        </div>
+        <div>
+          <span>String Array: {JSON.stringify(stringArr)}, item type: {typeof stringArr[0]}</span>
+          <button onClick={this.changeStringArray}>change array</button>
+        </div>
+        <div>
+          <span>Boolean: {bool ? 'true' : 'false'}, type: {typeof bool}</span>
+          <button onClick={this.changeBoolean}>change boolean</button>
         </div>
       </div>
     )
@@ -54,11 +77,16 @@ export default queryToStateHOC(Demo, {
   history,
   queryPropTypes: {
     num: QueryPropTypes.number,
-    inputStr: QueryPropTypes.string
+    inputStr: QueryPropTypes.string,
+    numericArr: QueryPropTypes.numericArray,
+    stringArr: QueryPropTypes.array,
+    bool: QueryPropTypes.boolean
   },
   defaultQueryProps: {
     num: 123,
     inputStr: 'abc',
-    arr: [1, 2]
-  },
+    numericArr: [1, 2],
+    stringArr: ['1', '2'],
+    bool: false
+  }
 })

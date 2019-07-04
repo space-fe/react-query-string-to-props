@@ -27,4 +27,5 @@ export default queryToStateHOC(Demo, {
   defaultQueryProps: {
     searchStr: 'search'
   },
+  mapDefaultQueryPropsToUrlWhenMount: true
 })

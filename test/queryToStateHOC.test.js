@@ -1,7 +1,10 @@
 import React from 'react'
+import { createBrowserHistory } from 'history'
 import queryString from 'query-string'
 import queryToStateHOC from '../src/index'
 import cases from 'jest-in-case'
+
+const history = createBrowserHistory()
 
 const getLocation = (pathname, search) => {
   return {
@@ -30,6 +33,8 @@ cases('test queryToStateHOC', opts => {
     return <div>{searchStr2}</div>
   }
 
+  config1.history = history
+  config2.history = history
   const SearcherQueryToStateComp = queryToStateHOC(Searcher, config1)
   const FunctionalSearcherQueryToStateComp = queryToStateHOC(FunctionalSearcher, config2)
 
