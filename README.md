@@ -1,7 +1,7 @@
 # react-query-string-to-props
 [![Build Status](https://travis-ci.org/space-fe/react-query-string-to-props.svg?branch=master)](https://travis-ci.org/space-fe/react-query-string-to-props)
 
-Mapping query string from url to Component props seamlessly.
+Mapping query string from url to Component props seamlessly. [react-query-string-to-props](https://space-fe.github.io/query2props)
 
 ## Installation
 Use `npm`
