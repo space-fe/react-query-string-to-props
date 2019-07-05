@@ -1,7 +1,7 @@
 # react-query-string-to-props
 [![Build Status](https://travis-ci.org/space-fe/react-query-string-to-props.svg?branch=master)](https://travis-ci.org/space-fe/react-query-string-to-props)
 
-Mapping query string from the path to Component state seamlessly.
+Mapping query string from the path to Component props seamlessly.
 
 ## Installation
 Use `npm`
@@ -176,6 +176,13 @@ export default class App extends React.Component {
 | `queryPropTypes` | `object` | | Only properties declared in the queryPropTypes object will be mapped from the path to Component props, and the declared types will be used to decode the query string to Component props. |
 | `defaultQueryProps` | `object` | | Default query props, aka initial props. |
 | `validatorMap` | `object` | | `Optional`. ValidatorMap is a dictionary of properties validators. The key is a property name, and the value is an array of validator for this property. |
+
+### QueryPropTypes
+- number
+- string
+- boolean
+- array
+- numericArray
 
 ### ValidatorMap
 ValidatorMap is a dictionary of properties validators. The key is a property, and the value is an array of validator for this property.
