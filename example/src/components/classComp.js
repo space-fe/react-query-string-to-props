@@ -1,5 +1,5 @@
 import React from 'react'
-import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from '../src'
+import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-string-to-props'
 import history from '../history'
 
 const getRandomNum = (maxNum, minNum) => {

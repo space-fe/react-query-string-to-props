@@ -1,5 +1,7 @@
 import { validateObject } from '../src/utils/validate'
 import { filterObjWithDefaultObj } from '../src/utils/objectUtil'
+import { decodeObj } from '../src/utils/decode'
+import { QueryPropTypes } from '../src'
 import cases from 'jest-in-case'
 
 cases('test utils validateObject', opts => {
@@ -90,8 +92,8 @@ cases('test utils validateObject', opts => {
 ])
 
 cases('test utils filterObjWithDefaultObj', opts => {
-  const { obj, defaultObj, expectedResult } = opts
-  expect(filterObjWithDefaultObj(obj, defaultObj)).toEqual(expectedResult)
+  const { obj, defaultObj, filterKeys, expectedResult } = opts
+  expect(filterObjWithDefaultObj(obj, defaultObj, filterKeys)).toEqual(expectedResult)
 }, [
   {
     name: 'When object key value is a string',
@@ -102,6 +104,7 @@ cases('test utils filterObjWithDefaultObj', opts => {
     defaultObj: {
       key1: 'defaultObj-key1'
     },
+    filterKeys: ['key1'],
     expectedResult: {
       key1: 'obj-key1'
     }
@@ -116,9 +119,79 @@ cases('test utils filterObjWithDefaultObj', opts => {
       key1: 'defaultObj-key1',
       key2: 'defaultObj-key2'
     },
+    filterKeys: ['key1', 'key2'],
     expectedResult: {
       key1: true,
       key2: false
+    }
+  }
+])
+
+cases('test utils decode', opts => {
+  const { obj, objTypes, expectedResult } = opts
+  expect(decodeObj(obj, objTypes)).toEqual(expectedResult)
+}, [
+  {
+    name: 'Test basic types',
+    obj: {
+      num: '123',
+      bool: 'false',
+      str: 123,
+      arr: ['a', 1],
+      numericArr: ['1a', '2b']
+    },
+    objTypes: {
+      num: QueryPropTypes.number,
+      bool: QueryPropTypes.boolean,
+      str: QueryPropTypes.string,
+      arr: QueryPropTypes.array,
+      numericArr: QueryPropTypes.numericArray
+    },
+    expectedResult: {
+      num: 123,
+      bool: false,
+      str: '123',
+      arr: ['a', 1],
+      numericArr: [1, 2]
+    }
+  },
+  {
+    name: 'Test disnormal values',
+    obj: {
+      num: null,
+      str: null
+    },
+    objTypes: {
+      num: QueryPropTypes.number,
+      str: QueryPropTypes.string
+    },
+    expectedResult: {
+      num: undefined,
+      str: undefined
+    }
+  },
+  {
+    name: 'Test disnormal number',
+    obj: {
+      num: 'abc'
+    },
+    objTypes: {
+      num: QueryPropTypes.number
+    },
+    expectedResult: {
+      num: undefined
+    }
+  },
+  {
+    name: 'Test boolean',
+    obj: {
+      bool: 'true'
+    },
+    objTypes: {
+      bool: QueryPropTypes.boolean
+    },
+    expectedResult: {
+      bool: true
     }
   }
 ])

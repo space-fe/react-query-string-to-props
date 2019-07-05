@@ -1,7 +1,7 @@
 import React from 'react'
 import { createBrowserHistory } from 'history'
 import queryString from 'query-string'
-import queryToStateHOC from '../src/index'
+import queryToStateHOC, { QueryPropTypes, ValidateTypes } from '../src/index'
 import cases from 'jest-in-case'
 
 const history = createBrowserHistory()
@@ -16,7 +16,7 @@ const l1 = getLocation('/page')
 const l2 = getLocation('/page', { searchStr1: 'l2-str1', searchStr2: 'l2-str2' })
 const l3 = getLocation('/page', { searchStr1: 'l3-str1', searchStr2: 'l3-str2', name: 'momo' })
 
-cases('test queryToStateHOC', opts => {
+cases('test queryToPropsHOC', opts => {
   const { config1, config2, locationChangingPath, updates = [], expectedStates } = opts
   const [ updates1, updates2 ] = updates
   const [ expectedState1, expectedState2 ] = expectedStates
@@ -87,18 +87,24 @@ cases('test queryToStateHOC', opts => {
   {
     name: 'When route changes, and no state updates',
     config1: {
-      initState: {
+      queryPropTypes: {
+        searchStr1: QueryPropTypes.string
+      },
+      defaultQueryProps: {
         searchStr1: 'initstr1'
       },
       validatorMap: {
         searchStr1: [
-          { type: 'regexp', value: /(\w)+/i }
+          { type: ValidateTypes.regexp, value: /(\w)+/i }
         ]
       },
-      isReplace: false
+      replaceWhenChange: false
     },
     config2: {
-      initState: {
+      queryPropTypes: {
+        searchStr2: QueryPropTypes.string
+      },
+      defaultQueryProps: {
         searchStr2: 'initstr2'
       }
     },
@@ -111,17 +117,23 @@ cases('test queryToStateHOC', opts => {
   {
     name: 'When state updates, and no route changes',
     config1: {
-      initState: {
+      queryPropTypes: {
+        searchStr1: QueryPropTypes.string
+      },
+      defaultQueryProps: {
         searchStr1: 'initstr1'
       },
       validatorMap: {
         searchStr1: [
-          { type: 'regexp', value: /(\w)+/i }
+          { type: ValidateTypes.regexp, value: /(\w)+/i }
         ]
       }
     },
     config2: {
-      initState: {
+      queryPropTypes: {
+        searchStr2: QueryPropTypes.string
+      },
+      defaultQueryProps: {
         searchStr2: 'initstr2'
       }
     },
@@ -138,23 +150,29 @@ cases('test queryToStateHOC', opts => {
   {
     name: 'When state updates, and route changes',
     config1: {
-      initState: {
+      queryPropTypes: {
+        searchStr1: QueryPropTypes.string
+      },
+      defaultQueryProps: {
         searchStr1: 'initstr1'
       },
       validatorMap: {
         searchStr1: [
-          { type: 'regexp', value: /^test/i }
+          { type: ValidateTypes.regexp, value: /^test/i }
         ]
       },
-      isReplace: false
+      replaceWhenChange: false
     },
     config2: {
-      initState: {
+      queryPropTypes: {
+        searchStr2: QueryPropTypes.string
+      },
+      defaultQueryProps: {
         searchStr2: 'initstr2'
       },
       validatorMap: {
         searchStr1: [
-          { type: 'regexp', value: /^test/i }
+          { type: ValidateTypes.regexp, value: /^test/i }
         ]
       }
     },
@@ -171,12 +189,19 @@ cases('test queryToStateHOC', opts => {
   {
     name: 'When location search string changes',
     config1: {
-      initState: {
+      queryPropTypes: {
+        searchStr1: QueryPropTypes.string
+      },
+      defaultQueryProps: {
         searchStr1: 'initstr1'
       }
     },
     config2: {
-      initState: {
+      queryPropTypes: {
+        searchStr2: QueryPropTypes.string,
+        name: QueryPropTypes.string
+      },
+      defaultQueryProps: {
         searchStr2: 'initstr2',
         name: 'mo'
       }
@@ -190,12 +215,18 @@ cases('test queryToStateHOC', opts => {
   {
     name: 'When there is no route changes',
     config1: {
-      initState: {
+      queryPropTypes: {
+        searchStr1: QueryPropTypes.string
+      },
+      defaultQueryProps: {
         searchStr1: 'initstr1'
       }
     },
     config2: {
-      initState: {
+      queryPropTypes: {
+        searchStr2: QueryPropTypes.string
+      },
+      defaultQueryProps: {
         searchStr2: 'initstr2'
       }
     },
@@ -205,22 +236,28 @@ cases('test queryToStateHOC', opts => {
     ]
   },
   {
-    name: 'When there is no initState config',
-    config1: {},
+    name: 'When there is no route changes and mapDefaultQueryPropsToUrlWhenMount=true',
+    config1: {
+      queryPropTypes: {
+        searchStr1: QueryPropTypes.string
+      },
+      defaultQueryProps: {
+        searchStr1: 'initstr1'
+      },
+      mapDefaultQueryPropsToUrlWhenMount: true
+    },
     config2: {
-      initState: {
+      queryPropTypes: {
+        searchStr2: QueryPropTypes.string
+      },
+      defaultQueryProps: {
         searchStr2: 'initstr2'
-      }
+      },
+      mapDefaultQueryPropsToUrlWhenMount: true
     },
     expectedStates: [
-      {},
+      { searchStr1: 'initstr1' },
       { searchStr2: 'initstr2' }
     ]
-  },
-  {
-    name: 'When there is no query string in location',
-    config1: {},
-    config2: {},
-    expectedStates: [{}, {}]
   }
 ])

@@ -1,5 +1,5 @@
 import React from 'react'
-import queryToStateHOC, { QueryPropTypes } from '../src'
+import queryToStateHOC, { QueryPropTypes } from 'react-query-string-to-props'
 import history from '../history'
 
 function Demo (props) {
