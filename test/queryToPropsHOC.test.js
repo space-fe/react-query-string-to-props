@@ -87,7 +87,7 @@ cases('test queryToPropsHOC', opts => {
   {
     name: 'When route changes, and no state updates',
     config1: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr1: QueryPropTypes.string
       },
       defaultQueryProps: {
@@ -101,7 +101,7 @@ cases('test queryToPropsHOC', opts => {
       replaceWhenChange: false
     },
     config2: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr2: QueryPropTypes.string
       },
       defaultQueryProps: {
@@ -117,7 +117,7 @@ cases('test queryToPropsHOC', opts => {
   {
     name: 'When state updates, and no route changes',
     config1: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr1: QueryPropTypes.string
       },
       defaultQueryProps: {
@@ -130,7 +130,7 @@ cases('test queryToPropsHOC', opts => {
       }
     },
     config2: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr2: QueryPropTypes.string
       },
       defaultQueryProps: {
@@ -150,7 +150,7 @@ cases('test queryToPropsHOC', opts => {
   {
     name: 'When state updates, and route changes',
     config1: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr1: QueryPropTypes.string
       },
       defaultQueryProps: {
@@ -164,7 +164,7 @@ cases('test queryToPropsHOC', opts => {
       replaceWhenChange: false
     },
     config2: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr2: QueryPropTypes.string
       },
       defaultQueryProps: {
@@ -189,7 +189,7 @@ cases('test queryToPropsHOC', opts => {
   {
     name: 'When location search string changes',
     config1: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr1: QueryPropTypes.string
       },
       defaultQueryProps: {
@@ -197,7 +197,7 @@ cases('test queryToPropsHOC', opts => {
       }
     },
     config2: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr2: QueryPropTypes.string,
         name: QueryPropTypes.string
       },
@@ -215,7 +215,7 @@ cases('test queryToPropsHOC', opts => {
   {
     name: 'When there is no route changes',
     config1: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr1: QueryPropTypes.string
       },
       defaultQueryProps: {
@@ -223,7 +223,7 @@ cases('test queryToPropsHOC', opts => {
       }
     },
     config2: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr2: QueryPropTypes.string
       },
       defaultQueryProps: {
@@ -238,7 +238,7 @@ cases('test queryToPropsHOC', opts => {
   {
     name: 'When there is no route changes and mapDefaultQueryPropsToUrlWhenMount=true',
     config1: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr1: QueryPropTypes.string
       },
       defaultQueryProps: {
@@ -247,7 +247,7 @@ cases('test queryToPropsHOC', opts => {
       mapDefaultQueryPropsToUrlWhenMount: true
     },
     config2: {
-      queryPropTypes: {
+      queryPropsConfig: {
         searchStr2: QueryPropTypes.string
       },
       defaultQueryProps: {

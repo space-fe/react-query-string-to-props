@@ -5,7 +5,7 @@
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-query-string-to-props": "^0.0.1",
+    "react-query-string-to-props": "^0.0.2",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1"
   },
