@@ -1,7 +1,6 @@
 import React from 'react';
 import onRouteChangedHOC from 'react-onroutechanged';
 import queryString from 'query-string';
-import { createBrowserHistory } from 'history';
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -162,18 +161,18 @@ function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance");
 }
 
-var _validateMethods;
-
-var validateTypes = {
+var ValidateTypes = {
   range: 'range',
   regexp: 'regexp',
   function: 'function'
 };
-var validateMethods = (_validateMethods = {}, _defineProperty(_validateMethods, validateTypes.range, function (value, validatorVal) {
+
+var _validateMethods;
+var validateMethods = (_validateMethods = {}, _defineProperty(_validateMethods, ValidateTypes.range, function (value, validatorVal) {
   return validatorVal.includes(value);
-}), _defineProperty(_validateMethods, validateTypes.regexp, function (value, validatorVal) {
+}), _defineProperty(_validateMethods, ValidateTypes.regexp, function (value, validatorVal) {
   return validatorVal.test(value);
-}), _defineProperty(_validateMethods, validateTypes.function, function (value, validatorVal) {
+}), _defineProperty(_validateMethods, ValidateTypes.function, function (value, validatorVal) {
   return validatorVal(value);
 }), _validateMethods);
 
@@ -208,46 +207,107 @@ var booleanConverter = function booleanConverter(v) {
 };
 
 var filterObjWithDefaultObj = function filterObjWithDefaultObj(obj, defaultObj) {
-  return Object.entries(defaultObj).reduce(function (prev, _ref) {
-    var _ref2 = _slicedToArray(_ref, 2),
-        key = _ref2[0],
-        defaultValue = _ref2[1];
-
-    return Object.prototype.hasOwnProperty.call(obj, key) ? _objectSpread({}, prev, _defineProperty({}, key, booleanConverter(obj[key]))) : _objectSpread({}, prev, _defineProperty({}, key, defaultValue));
+  var filterKeys = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+  return filterKeys.reduce(function (prev, key) {
+    return Object.prototype.hasOwnProperty.call(obj, key) ? _objectSpread({}, prev, _defineProperty({}, key, booleanConverter(obj[key]))) : _objectSpread({}, prev, _defineProperty({}, key, defaultObj[key]));
   }, {});
 };
 
-var queryToStateHOC = function queryToStateHOC(DecoratedComponent, config) {
+var QueryPropTypes = {
+  number: 'number',
+  string: 'string',
+  array: 'array',
+  boolean: 'boolean',
+  numericArray: 'numericArray'
+};
+
+var _Decoders;
+var decodeBoolean = function decodeBoolean(boolStr) {
+  return boolStr === 'true' ? true : boolStr === 'false' ? false : boolStr;
+};
+var decodeNumber = function decodeNumber(numStr) {
+  if (numStr === null) {
+    return undefined;
+  }
+
+  var result = parseFloat(numStr);
+
+  if (isNaN(result)) {
+    return undefined;
+  }
+
+  return result;
+};
+var decodeString = function decodeString(str) {
+  if (str == null) {
+    return undefined;
+  }
+
+  return String(str);
+};
+var decodeNumericArray = function decodeNumericArray() {
+  var arr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  return arr.map(function (item) {
+    return decodeNumber(item);
+  });
+};
+var Decoders = (_Decoders = {}, _defineProperty(_Decoders, QueryPropTypes.boolean, decodeBoolean), _defineProperty(_Decoders, QueryPropTypes.number, decodeNumber), _defineProperty(_Decoders, QueryPropTypes.string, decodeString), _defineProperty(_Decoders, QueryPropTypes.numericArray, decodeNumericArray), _Decoders);
+var decode = function decode(type, encodedValue, defaultValue) {
+  return Decoders[type] ? Decoders[type](encodedValue) : encodedValue;
+};
+var decodeObj = function decodeObj(obj, objTypes) {
+  return Object.entries(obj).reduce(function (prev, _ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        key = _ref2[0],
+        value = _ref2[1];
+
+    return _objectSpread({}, prev, _defineProperty({}, key, decode(objTypes[key], value)));
+  }, {});
+};
+
+var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
   var componentName = DecoratedComponent.displayName || DecoratedComponent.name || 'Component';
-  var isReactComponent = DecoratedComponent.prototype.isReactComponent;
-  var initState = config.initState,
+  var isReactComponent = DecoratedComponent.prototype && DecoratedComponent.prototype.isReactComponent;
+  var queryPropTypes = config.queryPropTypes,
+      defaultQueryProps = config.defaultQueryProps,
       validatorMap = config.validatorMap,
-      _config$isReplace = config.isReplace,
-      isReplace = _config$isReplace === void 0 ? true : _config$isReplace,
-      _config$history = config.history,
-      history = _config$history === void 0 ? createBrowserHistory() : _config$history;
+      history = config.history,
+      _config$replaceWhenCh = config.replaceWhenChange,
+      replaceWhenChange = _config$replaceWhenCh === void 0 ? true : _config$replaceWhenCh,
+      _config$mapDefaultQue = config.mapDefaultQueryPropsToUrlWhenMount,
+      mapDefaultQueryPropsToUrlWhenMount = _config$mapDefaultQue === void 0 ? false : _config$mapDefaultQue;
 
-  var defaultState = _objectSpread({}, initState);
+  if (!history) {
+    throw new Error('History object must be provided for configuration!');
+  }
 
-  var queryToStateComponent =
+  if (!queryPropTypes || !Object.keys(queryPropTypes).length) {
+    throw new Error('queryPropTypes must be provided for configuration!');
+  }
+
+  var defaultState = _objectSpread({}, defaultQueryProps);
+
+  var queryToPropsComponent =
   /*#__PURE__*/
   function (_React$PureComponent) {
-    _inherits(queryToStateComponent, _React$PureComponent);
+    _inherits(queryToPropsComponent, _React$PureComponent);
 
-    function queryToStateComponent() {
+    function queryToPropsComponent() {
       var _getPrototypeOf2;
 
       var _this;
 
-      _classCallCheck(this, queryToStateComponent);
+      _classCallCheck(this, queryToPropsComponent);
 
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
 
-      _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(queryToStateComponent)).call.apply(_getPrototypeOf2, [this].concat(args)));
+      _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(queryToPropsComponent)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
-      _defineProperty(_assertThisInitialized(_this), "state", _objectSpread({}, initState));
+      _defineProperty(_assertThisInitialized(_this), "state", _objectSpread({}, defaultState));
+
+      _defineProperty(_assertThisInitialized(_this), "__firstCallHandleRouteChanged", false);
 
       _defineProperty(_assertThisInitialized(_this), "currentLocation", null);
 
@@ -270,13 +330,13 @@ var queryToStateHOC = function queryToStateHOC(DecoratedComponent, config) {
 
         var pathname = _this.currentLocation.pathname;
         var newPath = "".concat(pathname).concat(queryStr ? "?".concat(queryStr) : '');
-        isReplace ? history.replace(newPath) : history.push(newPath);
+        replaceWhenChange ? history.replace(newPath) : history.push(newPath);
       });
 
       _defineProperty(_assertThisInitialized(_this), "__updateState", function (patches, callback) {
         var newState = _objectSpread({}, _this.state, patches);
 
-        var validatedState = validateObject(newState, initState, validatorMap);
+        var validatedState = validateObject(newState, defaultState, validatorMap);
 
         _this.__updateUrl(validatedState);
 
@@ -290,16 +350,24 @@ var queryToStateHOC = function queryToStateHOC(DecoratedComponent, config) {
 
         var currentQueryObj = _this.__getCurrentQueryObj();
 
-        var filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState);
-        var validatedQueryObj = validateObject(filterQueryObj, initState, validatorMap);
+        var filterKeys = Object.keys(queryPropTypes);
+        var filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState, filterKeys);
+        var decodedQueryObj = decodeObj(filterQueryObj, queryPropTypes);
+        var validatedQueryObj = validateObject(decodedQueryObj, defaultState, validatorMap);
 
         _this.setState(_objectSpread({}, validatedQueryObj));
+
+        if (!_this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMount) {
+          _this.__updateUrl(validatedQueryObj);
+        }
+
+        _this.__firstCallHandleRouteChanged = true;
       });
 
       return _this;
     }
 
-    _createClass(queryToStateComponent, [{
+    _createClass(queryToPropsComponent, [{
       key: "render",
       value: function render() {
         var _this2 = this;
@@ -318,15 +386,16 @@ var queryToStateHOC = function queryToStateHOC(DecoratedComponent, config) {
       }
     }]);
 
-    return queryToStateComponent;
+    return queryToPropsComponent;
   }(React.PureComponent);
 
-  _defineProperty(queryToStateComponent, "displayName", "QueryToState(".concat(componentName, ")"));
+  _defineProperty(queryToPropsComponent, "displayName", "QueryToProp(".concat(componentName, ")"));
 
-  return onRouteChangedHOC(queryToStateComponent, {
+  return onRouteChangedHOC(queryToPropsComponent, {
     mounted: true,
     onlyPathname: false
   });
 };
 
-export default queryToStateHOC;
+export default queryToPropsHOC;
+export { QueryPropTypes, ValidateTypes };
