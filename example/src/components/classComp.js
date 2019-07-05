@@ -1,5 +1,5 @@
 import React from 'react'
-import queryToStateHOC, { QueryPropTypes } from '../src'
+import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from '../src'
 import history from '../history'
 
 const getRandomNum = (maxNum, minNum) => {
@@ -73,7 +73,7 @@ class Demo extends React.PureComponent {
   }
 }
 
-export default queryToStateHOC(Demo, {
+export default queryToPropsHOC(Demo, {
   history,
   queryPropTypes: {
     num: QueryPropTypes.number,
@@ -83,10 +83,20 @@ export default queryToStateHOC(Demo, {
     bool: QueryPropTypes.boolean
   },
   defaultQueryProps: {
-    num: 123,
+    num: 50,
     inputStr: 'abc',
     numericArr: [1, 2],
     stringArr: ['1', '2'],
     bool: false
+  },
+  validatorMap: {
+    num: [
+      {
+        type: ValidateTypes.function,
+        value: val => {
+          return val >= 50
+        }
+      }
+    ]
   }
 })

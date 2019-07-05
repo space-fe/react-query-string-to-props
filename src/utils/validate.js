@@ -1,13 +1,9 @@
-export const validateTypes = {
-  range: 'range',
-  regexp: 'regexp',
-  function: 'function'
-}
+import { ValidateTypes } from '../ValidateTypes'
 
 const validateMethods = {
-  [validateTypes.range]: (value, validatorVal) => validatorVal.includes(value),
-  [validateTypes.regexp]: (value, validatorVal) => validatorVal.test(value),
-  [validateTypes.function]: (value, validatorVal) => validatorVal(value)
+  [ValidateTypes.range]: (value, validatorVal) => validatorVal.includes(value),
+  [ValidateTypes.regexp]: (value, validatorVal) => validatorVal.test(value),
+  [ValidateTypes.function]: (value, validatorVal) => validatorVal(value)
 }
 
 const validateObject = (obj, defaultObj, validator) => {

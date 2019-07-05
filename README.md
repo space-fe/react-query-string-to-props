@@ -1,16 +1,16 @@
-# react-query-to-state
-[![Build Status](https://travis-ci.org/space-fe/react-query-to-state.svg?branch=master)](https://travis-ci.org/space-fe/react-query-to-state)
+# react-query-string-to-props
+[![Build Status](https://travis-ci.org/space-fe/react-query-string-to-props.svg?branch=master)](https://travis-ci.org/space-fe/react-query-string-to-props)
 
 Mapping query string from the path to Component state seamlessly.
 
 ## Installation
 Use `npm`
 ```shell
-npm install react-query-to-state
+npm install react-query-string-to-props
 ```
 Use `yarn`
 ```shell
-yarn add react-query-to-state
+yarn add react-query-string-to-props
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ yarn add react-query-to-state
 ### ES6 Class Component
 ```javascript
 import React from 'react'
-import queryToStateHOC from 'react-query-to-state'
+import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-to-state'
 import { createBrowserHistory } from 'history'
 
 class Searcher extends React.Component {
@@ -41,28 +41,33 @@ class Searcher extends React.Component {
 }
 
 const config = {
-  history: createBrowserHistory(),  // optional
-  initState: {
+  history: createBrowserHistory(),
+  queryPropTypes: {
+    searchStr: QueryPropTypes.string
+  },
+  defaultQueryProps: {
     searchStr: 'abcde'
   },
   validatorMap: {
     searchStr: [
       {
-        type: 'regexp',
+        type: ValidateTypes.regexp,
         value: /^abc/i
       }
     ]
   },
-  isReplace: true
+  replaceWhenChange: true,
+  mapDefaultQueryPropsToUrlWhenMount: true
 }
 
-export default queryToStateHOC(Searcher, config)
+export default queryToPropsHOC(Searcher, config)
 ```
 
 ### Functional Component
 ```javascript
 import React from 'react'
-import queryToStateHOC from 'react-query-to-state'
+import { createBrowserHistory } from 'history'
+import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-to-state'
 
 const Searcher = (props) => {
   const handleChange = (event) => {
@@ -82,18 +87,22 @@ const Searcher = (props) => {
 }
 
 const config = {
-  initState: {
-    searchStr: ''
+  history: createBrowserHistory(),
+  queryPropTypes: {
+    searchStr: QueryPropTypes.string
   }
 }
 
-export default queryToStateHOC(Searcher, config)
+export default queryToPropsHOC(Searcher, config)
 ```
 
 ### Multiple Components in one page
 ```javascript
 import React from 'react'
-import queryToStateHOC from 'react-query-to-state'
+import { createBrowserHistory } from 'history'
+import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-to-state'
+
+const history = createBrowserHistory(),
 
 class Searcher extends React.Component {
   render () {
@@ -108,13 +117,17 @@ const FunctionalSearcher = (props) => {
 }
 
 const config1 = {
-  initState: {
+  history,
+  queryPropTypes: {
+    searchStr1: QueryPropTypes.string
+  },
+  defaultQueryProps: {
     searchStr1: 'str1'
   },
   validatorMap: {
     searchStr1: [
       {
-        type: 'range',
+        type: ValidateTypes.range,
         value: ['aaa', 'bbb']
       }
     ]
@@ -122,13 +135,17 @@ const config1 = {
 }
 
 const config2 = {
-  initState: {
+  history,
+  queryPropTypes: {
+    searchStr2: QueryPropTypes.string
+  },
+  defaultQueryProps: {
     searchStr2: 'str2'
   },
   validatorMap: {
     searchStr2: [
       {
-        type: 'function',
+        type: ValidateTypes.function,
         value: (val) => {
           return val.startsWith('test')
         }
@@ -137,8 +154,8 @@ const config2 = {
   }
 }
 
-const SearcherQueryToStateComp = queryToStateHOC(Searcher, config1)
-const FunctionalSearcherQueryToStateComp = queryToStateHOC(FunctionalSearcher, config2)
+const SearcherQueryToStateComp = queryToPropsHOC(Searcher, config1)
+const FunctionalSearcherQueryToStateComp = queryToPropsHOC(FunctionalSearcher, config2)
 
 export default class App extends React.Component {
   render () {
@@ -153,15 +170,17 @@ export default class App extends React.Component {
 ## Configuration
 | Name           | Type      | Default | Description                                                                                                                                                                                                                             |
 | -------------- | --------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `history` | `object` | createBrowserHistory() | `Optional`. History object, see [history](https://github.com/ReactTraining/history) for more information. |
-| `isReplace` | `boolean` | `true` | `Optional`. If `true`, history.replace() will be called, or history.push() will be called when queryState is updated by component. |
-| `initState` | `object` | | Only properties declared in the initState object will be mapped from the path to Component state. |
+| `history` | `object` |  | `Required`. History object, see [history](https://github.com/ReactTraining/history) for more information. |
+| `replaceWhenChange` | `boolean` | `true` | `Optional`. If `true`, history.replace() will be called, or history.push() will be called when query is updated by component. |
+| `mapDefaultQueryPropsToUrlWhenMount` | `boolean` | `false` | `Optional`. If `true`, default query props will be mapped to url when Component mounts. |
+| `queryPropTypes` | `object` | | Only properties declared in the queryPropTypes object will be mapped from the path to Component props, and the declared types will be used to decode the query string to Component props. |
+| `defaultQueryProps` | `object` | | Default query props, aka initial props. |
 | `validatorMap` | `object` | | `Optional`. ValidatorMap is a dictionary of properties validators. The key is a property name, and the value is an array of validator for this property. |
 
 ### ValidatorMap
 ValidatorMap is a dictionary of properties validators. The key is a property, and the value is an array of validator for this property.
 
-`validateTypes`:
+`ValidateTypes`:
 - range
 - regexp
 - function
@@ -170,17 +189,17 @@ ValidatorMap is a dictionary of properties validators. The key is a property, an
 const validatorMap = {
   key1: [
     {
-      type: 'range',
+      type: ValidateTypes.range,
       value: ['aa', 'bb', 'cc']
     }
   ],
   key2: [
     {
-      type: 'regexp',
+      type: ValidateTypes.regexp,
       value: /^test/i
     },
     {
-      type: 'function',
+      type: ValidateTypes.function,
       value: val => {
         return val.endsWith('abc')
       }

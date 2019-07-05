@@ -5,7 +5,7 @@ import { validateObject } from './utils/validate'
 import { filterObjWithDefaultObj } from './utils/objectUtil'
 import { decodeObj } from './utils/decode'
 
-const queryToStateHOC = (DecoratedComponent, config) => {
+const queryToPropsHOC = (DecoratedComponent, config) => {
   const componentName = DecoratedComponent.displayName || DecoratedComponent.name || 'Component'
   const isReactComponent = DecoratedComponent.prototype && DecoratedComponent.prototype.isReactComponent
 
@@ -28,8 +28,8 @@ const queryToStateHOC = (DecoratedComponent, config) => {
 
   const defaultState = { ...defaultQueryProps }
 
-  class queryToStateComponent extends React.PureComponent {
-    static displayName = `QueryToState(${componentName})`
+  class queryToPropsComponent extends React.PureComponent {
+    static displayName = `QueryToProp(${componentName})`
 
     state = { ...defaultState }
 
@@ -107,7 +107,7 @@ const queryToStateHOC = (DecoratedComponent, config) => {
     }
   }
 
-  return onRouteChangedHOC(queryToStateComponent, { mounted: true, onlyPathname: false })
+  return onRouteChangedHOC(queryToPropsComponent, { mounted: true, onlyPathname: false })
 }
 
-export default queryToStateHOC
+export default queryToPropsHOC
