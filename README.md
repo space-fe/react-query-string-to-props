@@ -18,7 +18,7 @@ yarn add react-query-string-to-props
 ### ES6 Class Component
 ```javascript
 import React from 'react'
-import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-to-state'
+import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-string-to-props'
 import { createBrowserHistory } from 'history'
 
 class Searcher extends React.Component {
@@ -66,7 +66,7 @@ export default queryToPropsHOC(Searcher, config)
 ```javascript
 import React from 'react'
 import { createBrowserHistory } from 'history'
-import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-to-state'
+import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-string-to-props'
 
 const Searcher = (props) => {
   const handleChange = (event) => {
@@ -98,7 +98,7 @@ export default queryToPropsHOC(Searcher, config)
 ```javascript
 import React from 'react'
 import { createBrowserHistory } from 'history'
-import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-to-state'
+import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-string-to-props'
 
 const history = createBrowserHistory(),
 
