@@ -1,0 +1,77 @@
+{
+  "name": "react-query-string-to-props",
+  "version": "0.0.3",
+  "description": "Mapping query string from url to Component props seamlessly.",
+  "main": "es/index.js",
+  "module": "es/index.js",
+  "scripts": {
+    "test": "jest --collectCoverage",
+    "lint": "eslint src/**/*.+\\(js\\|ts\\)*\\(x\\)",
+    "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build": "rollup -c",
+    "release:patch": "yarn build  && yarn version --patch && yarn publish && git push --follow-tags",
+    "release:minor": "yarn build && yarn version --minor && yarn publish && git push --follow-tags",
+    "release:major": "yarn build && yarn version --major && yarn publish && git push --follow-tags"
+  },
+  "pre-commit": [
+    "precommit-msg",
+    "lint"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/space-fe/react-query-to-state.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/space-fe/react-query-to-state/issues"
+  },
+  "homepage": "https://github.com/space-fe/react-query-to-state#readme",
+  "jest": {
+    "setupFilesAfterEnv": [
+      "jest-enzyme"
+    ],
+    "testEnvironment": "enzyme",
+    "testEnvironmentOptions": {
+      "enzymeAdaptor": "react16"
+    },
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.2",
+    "babel-jest": "^24.8.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-react": "^7.13.0",
+    "eslint-plugin-standard": "^4.0.0",
+    "history": "^4.9.0",
+    "jest": "^24.8.0",
+    "jest-environment-enzyme": "^7.0.2",
+    "jest-enzyme": "^7.0.2",
+    "jest-in-case": "^1.0.2",
+    "pre-commit": "^1.2.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "rollup": "^1.16.3",
+    "rollup-plugin-babel": "^4.3.3"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6"
+  },
+  "dependencies": {
+    "query-string": "^6.7.0",
+    "react-onroutechanged": "^1.0.0-beta.1"
+  }
+}
