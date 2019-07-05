@@ -1,6 +1,7 @@
 import React from 'react'
 import queryToStateHOC, { QueryPropTypes } from 'react-query-string-to-props'
 import history from '../history'
+import './style.css'
 
 function Demo (props) {
   const changeString = (event) => {
@@ -12,8 +13,9 @@ function Demo (props) {
   const { searchStr } = props
 
   return (
-    <div>
-      <span>String: {searchStr}, type: {typeof searchStr}</span>
+    <div className='item'>
+      <span>String: {searchStr}</span>
+      <span>type: {typeof searchStr}</span>
       <input onChange={changeString} />
     </div>
   )
@@ -27,5 +29,5 @@ export default queryToStateHOC(Demo, {
   defaultQueryProps: {
     searchStr: 'search'
   },
-  mapDefaultQueryPropsToUrlWhenMount: true
+  mapDefaultQueryPropsToUrlWhenMounted: true
 })

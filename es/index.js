@@ -278,10 +278,10 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
       defaultQueryProps = config.defaultQueryProps,
       validatorMap = config.validatorMap,
       history = config.history,
-      _config$replaceWhenCh = config.replaceWhenChange,
-      replaceWhenChange = _config$replaceWhenCh === void 0 ? true : _config$replaceWhenCh,
-      _config$mapDefaultQue = config.mapDefaultQueryPropsToUrlWhenMount,
-      mapDefaultQueryPropsToUrlWhenMount = _config$mapDefaultQue === void 0 ? false : _config$mapDefaultQue;
+      _config$replaceRouteW = config.replaceRouteWhenChange,
+      replaceRouteWhenChange = _config$replaceRouteW === void 0 ? true : _config$replaceRouteW,
+      _config$mapDefaultQue = config.mapDefaultQueryPropsToUrlWhenMounted,
+      mapDefaultQueryPropsToUrlWhenMounted = _config$mapDefaultQue === void 0 ? false : _config$mapDefaultQue;
 
   if (!history) {
     throw new Error('History object must be provided for configuration!');
@@ -336,7 +336,7 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
 
         var pathname = _this.currentLocation.pathname;
         var newPath = "".concat(pathname).concat(queryStr ? "?".concat(queryStr) : '');
-        replaceWhenChange ? history.replace(newPath) : history.push(newPath);
+        replaceRouteWhenChange ? history.replace(newPath) : history.push(newPath);
       });
 
       _defineProperty(_assertThisInitialized(_this), "__updateState", function (patches, callback) {
@@ -363,7 +363,7 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
 
         _this.setState(_objectSpread({}, validatedQueryObj));
 
-        if (!_this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMount) {
+        if (!_this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMounted) {
           _this.__updateUrl(validatedQueryObj);
         }
 

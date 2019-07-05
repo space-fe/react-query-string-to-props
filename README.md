@@ -1,7 +1,7 @@
 # react-query-string-to-props
 [![Build Status](https://travis-ci.org/space-fe/react-query-string-to-props.svg?branch=master)](https://travis-ci.org/space-fe/react-query-string-to-props)
 
-Mapping query string from the path to Component props seamlessly.
+Mapping query string from url to Component props seamlessly.
 
 ## Installation
 Use `npm`
@@ -28,8 +28,7 @@ class Searcher extends React.Component {
   }
 
   render () {
-    const { query } = this.props
-    const { searchStr } = query
+    const { searchStr } = this.props
 
     return (
       <div>
@@ -56,8 +55,8 @@ const config = {
       }
     ]
   },
-  replaceWhenChange: true,
-  mapDefaultQueryPropsToUrlWhenMount: true
+  replaceRouteWhenChange: true,
+  mapDefaultQueryPropsToUrlWhenMounted: true
 }
 
 export default queryToPropsHOC(Searcher, config)
@@ -75,8 +74,7 @@ const Searcher = (props) => {
     updateQueryState({ searchStr: event.target.value })
   }
 
-  const { query } = props
-  const { searchStr } = query
+  const { searchStr } = props
 
   return (
     <div>
@@ -171,10 +169,10 @@ export default class App extends React.Component {
 | Name           | Type      | Default | Description                                                                                                                                                                                                                             |
 | -------------- | --------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `history` | `object` |  | `Required`. History object, see [history](https://github.com/ReactTraining/history) for more information. |
-| `replaceWhenChange` | `boolean` | `true` | `Optional`. If `true`, history.replace() will be called, or history.push() will be called when query is updated by component. |
-| `mapDefaultQueryPropsToUrlWhenMount` | `boolean` | `false` | `Optional`. If `true`, default query props will be mapped to url when Component mounts. |
+| `replaceRouteWhenChange` | `boolean` | `true` | `Optional`. If `true`, history.replace() will be called, or history.push() will be called when query is updated by Component. |
+| `mapDefaultQueryPropsToUrlWhenMounted` | `boolean` | `false` | `Optional`. If `true`, default query props will be mapped to url when Component mounted. |
 | `queryPropsConfig` | `object` | | Only properties declared in the queryPropTypes object will be mapped from the path to Component props, and the declared types will be used to decode the query string to Component props. |
-| `defaultQueryProps` | `object` | | Default query props, aka initial props. |
+| `defaultQueryProps` | `object` | | Default query props. |
 | `validatorMap` | `object` | | `Optional`. ValidatorMap is a dictionary of properties validators. The key is a property name, and the value is an array of validator for this property. |
 
 ### queryPropsConfig

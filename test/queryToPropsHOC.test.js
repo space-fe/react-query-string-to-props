@@ -98,7 +98,7 @@ cases('test queryToPropsHOC', opts => {
           { type: ValidateTypes.regexp, value: /(\w)+/i }
         ]
       },
-      replaceWhenChange: false
+      replaceRouteWhenChange: false
     },
     config2: {
       queryPropsConfig: {
@@ -161,7 +161,7 @@ cases('test queryToPropsHOC', opts => {
           { type: ValidateTypes.regexp, value: /^test/i }
         ]
       },
-      replaceWhenChange: false
+      replaceRouteWhenChange: false
     },
     config2: {
       queryPropsConfig: {
@@ -236,7 +236,7 @@ cases('test queryToPropsHOC', opts => {
     ]
   },
   {
-    name: 'When there is no route changes and mapDefaultQueryPropsToUrlWhenMount=true',
+    name: 'When there is no route changes and mapDefaultQueryPropsToUrlWhenMounted=true',
     config1: {
       queryPropsConfig: {
         searchStr1: QueryPropTypes.string
@@ -244,7 +244,7 @@ cases('test queryToPropsHOC', opts => {
       defaultQueryProps: {
         searchStr1: 'initstr1'
       },
-      mapDefaultQueryPropsToUrlWhenMount: true
+      mapDefaultQueryPropsToUrlWhenMounted: true
     },
     config2: {
       queryPropsConfig: {
@@ -253,7 +253,7 @@ cases('test queryToPropsHOC', opts => {
       defaultQueryProps: {
         searchStr2: 'initstr2'
       },
-      mapDefaultQueryPropsToUrlWhenMount: true
+      mapDefaultQueryPropsToUrlWhenMounted: true
     },
     expectedStates: [
       { searchStr1: 'initstr1' },

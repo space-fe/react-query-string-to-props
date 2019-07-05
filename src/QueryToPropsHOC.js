@@ -14,8 +14,8 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
     defaultQueryProps,
     validatorMap,
     history,
-    replaceWhenChange = true,
-    mapDefaultQueryPropsToUrlWhenMount = false
+    replaceRouteWhenChange = true,
+    mapDefaultQueryPropsToUrlWhenMounted = false
   } = config
 
   if (!history) {
@@ -57,7 +57,7 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
       const { pathname } = this.currentLocation
       const newPath = `${pathname}${queryStr ? `?${queryStr}` : ''}`
 
-      replaceWhenChange ? history.replace(newPath) : history.push(newPath)
+      replaceRouteWhenChange ? history.replace(newPath) : history.push(newPath)
     }
 
     __updateState = (patches, callback) => {
@@ -85,7 +85,7 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
       const validatedQueryObj = validateObject(decodedQueryObj, defaultState, validatorMap)
       this.setState({ ...validatedQueryObj })
 
-      if (!this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMount) {
+      if (!this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMounted) {
         this.__updateUrl(validatedQueryObj)
       }
 

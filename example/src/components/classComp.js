@@ -1,6 +1,7 @@
 import React from 'react'
 import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-string-to-props'
 import history from '../history'
+import './style.css'
 
 const getRandomNum = (maxNum, minNum) => {
   return Math.floor(Math.random() * maxNum) + minNum
@@ -48,24 +49,29 @@ class Demo extends React.PureComponent {
 
     return (
       <div>
-        <div>
-          <span>Number: {num}, type: {typeof num}</span>
+        <div className='item'>
+          <span>Number: {num}</span>
+          <span>type: {typeof num}</span>
           <button onClick={this.changeNumber}>change number</button>
         </div>
-        <div>
-          <span>String: {inputStr}, type: {typeof inputStr}</span>
+        <div className='item'>
+          <span>String: {inputStr}</span>
+          <span>type: {typeof inputStr}</span>
           <input onChange={this.changeString} />
         </div>
-        <div>
-          <span>Numeric Array: {JSON.stringify(numericArr)}, item type: {typeof numericArr[0]}</span>
+        <div className='item'>
+          <span>Numeric Array: {JSON.stringify(numericArr)}</span>
+          <span>item type: {typeof numericArr[0]}</span>
           <button onClick={this.changeNumericArray}>change array</button>
         </div>
-        <div>
-          <span>String Array: {JSON.stringify(stringArr)}, item type: {typeof stringArr[0]}</span>
+        <div className='item'>
+          <span>String Array: {JSON.stringify(stringArr)}</span>
+          <span>item type: {typeof stringArr[0]}</span>
           <button onClick={this.changeStringArray}>change array</button>
         </div>
-        <div>
-          <span>Boolean: {bool ? 'true' : 'false'}, type: {typeof bool}</span>
+        <div className='item'>
+          <span>Boolean: {bool ? 'true' : 'false'}</span>
+          <span>type: {typeof bool}</span>
           <button onClick={this.changeBoolean}>change boolean</button>
         </div>
       </div>

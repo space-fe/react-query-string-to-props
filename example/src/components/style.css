@@ -1,0 +1,12 @@
+.item {
+  display: flex;
+  margin-bottom: 0.5em;
+}
+
+span {
+  margin-right: 1.5em;
+}
+
+span:first-child {
+  font-weight: 500;
+}
