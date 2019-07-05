@@ -44,7 +44,13 @@ export const Decoders = {
 }
 
 export const decode = (type, encodedValue, defaultValue) => {
-  return Decoders[type] ? Decoders[type](encodedValue) : encodedValue
+  if (typeof type === 'function') {
+    return type(encodedValue)
+  } else if (Decoders[type]) {
+    return Decoders[type](encodedValue)
+  }
+
+  return encodedValue
 }
 
 export const decodeObj = (obj, objTypes) => {

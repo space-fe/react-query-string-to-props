@@ -75,7 +75,7 @@ class Demo extends React.PureComponent {
 
 export default queryToPropsHOC(Demo, {
   history,
-  queryPropTypes: {
+  queryPropsConfig: {
     num: QueryPropTypes.number,
     inputStr: QueryPropTypes.string,
     numericArr: QueryPropTypes.numericArray,

@@ -10,7 +10,7 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
   const isReactComponent = DecoratedComponent.prototype && DecoratedComponent.prototype.isReactComponent
 
   const {
-    queryPropTypes,
+    queryPropsConfig,
     defaultQueryProps,
     validatorMap,
     history,
@@ -22,8 +22,8 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
     throw new Error('History object must be provided for configuration!')
   }
 
-  if (!queryPropTypes || !Object.keys(queryPropTypes).length) {
-    throw new Error('queryPropTypes must be provided for configuration!')
+  if (!queryPropsConfig || !Object.keys(queryPropsConfig).length) {
+    throw new Error('queryPropsConfig must be provided for configuration!')
   }
 
   const defaultState = { ...defaultQueryProps }
@@ -78,10 +78,10 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
       this.currentLocation = currLocation
 
       const currentQueryObj = this.__getCurrentQueryObj()
-      const filterKeys = Object.keys(queryPropTypes)
+      const filterKeys = Object.keys(queryPropsConfig)
       const filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState, filterKeys)
 
-      const decodedQueryObj = decodeObj(filterQueryObj, queryPropTypes)
+      const decodedQueryObj = decodeObj(filterQueryObj, queryPropsConfig)
       const validatedQueryObj = validateObject(decodedQueryObj, defaultState, validatorMap)
       this.setState({ ...validatedQueryObj })
 

@@ -253,7 +253,13 @@ var decodeNumericArray = function decodeNumericArray() {
 };
 var Decoders = (_Decoders = {}, _defineProperty(_Decoders, QueryPropTypes.boolean, decodeBoolean), _defineProperty(_Decoders, QueryPropTypes.number, decodeNumber), _defineProperty(_Decoders, QueryPropTypes.string, decodeString), _defineProperty(_Decoders, QueryPropTypes.numericArray, decodeNumericArray), _Decoders);
 var decode = function decode(type, encodedValue, defaultValue) {
-  return Decoders[type] ? Decoders[type](encodedValue) : encodedValue;
+  if (typeof type === 'function') {
+    return type(encodedValue);
+  } else if (Decoders[type]) {
+    return Decoders[type](encodedValue);
+  }
+
+  return encodedValue;
 };
 var decodeObj = function decodeObj(obj, objTypes) {
   return Object.entries(obj).reduce(function (prev, _ref) {
@@ -268,7 +274,7 @@ var decodeObj = function decodeObj(obj, objTypes) {
 var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
   var componentName = DecoratedComponent.displayName || DecoratedComponent.name || 'Component';
   var isReactComponent = DecoratedComponent.prototype && DecoratedComponent.prototype.isReactComponent;
-  var queryPropTypes = config.queryPropTypes,
+  var queryPropsConfig = config.queryPropsConfig,
       defaultQueryProps = config.defaultQueryProps,
       validatorMap = config.validatorMap,
       history = config.history,
@@ -281,8 +287,8 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
     throw new Error('History object must be provided for configuration!');
   }
 
-  if (!queryPropTypes || !Object.keys(queryPropTypes).length) {
-    throw new Error('queryPropTypes must be provided for configuration!');
+  if (!queryPropsConfig || !Object.keys(queryPropsConfig).length) {
+    throw new Error('queryPropsConfig must be provided for configuration!');
   }
 
   var defaultState = _objectSpread({}, defaultQueryProps);
@@ -350,9 +356,9 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
 
         var currentQueryObj = _this.__getCurrentQueryObj();
 
-        var filterKeys = Object.keys(queryPropTypes);
+        var filterKeys = Object.keys(queryPropsConfig);
         var filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState, filterKeys);
-        var decodedQueryObj = decodeObj(filterQueryObj, queryPropTypes);
+        var decodedQueryObj = decodeObj(filterQueryObj, queryPropsConfig);
         var validatedQueryObj = validateObject(decodedQueryObj, defaultState, validatorMap);
 
         _this.setState(_objectSpread({}, validatedQueryObj));

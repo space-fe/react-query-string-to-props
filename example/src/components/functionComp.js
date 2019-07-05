@@ -21,7 +21,7 @@ function Demo (props) {
 
 export default queryToStateHOC(Demo, {
   history,
-  queryPropTypes: {
+  queryPropsConfig: {
     searchStr: QueryPropTypes.string
   },
   defaultQueryProps: {

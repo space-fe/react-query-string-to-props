@@ -42,7 +42,7 @@ class Searcher extends React.Component {
 
 const config = {
   history: createBrowserHistory(),
-  queryPropTypes: {
+  queryPropsConfig: {
     searchStr: QueryPropTypes.string
   },
   defaultQueryProps: {
@@ -88,7 +88,7 @@ const Searcher = (props) => {
 
 const config = {
   history: createBrowserHistory(),
-  queryPropTypes: {
+  queryPropsConfig: {
     searchStr: QueryPropTypes.string
   }
 }
@@ -118,7 +118,7 @@ const FunctionalSearcher = (props) => {
 
 const config1 = {
   history,
-  queryPropTypes: {
+  queryPropsConfig: {
     searchStr1: QueryPropTypes.string
   },
   defaultQueryProps: {
@@ -136,7 +136,7 @@ const config1 = {
 
 const config2 = {
   history,
-  queryPropTypes: {
+  queryPropsConfig: {
     searchStr2: QueryPropTypes.string
   },
   defaultQueryProps: {
@@ -173,11 +173,14 @@ export default class App extends React.Component {
 | `history` | `object` |  | `Required`. History object, see [history](https://github.com/ReactTraining/history) for more information. |
 | `replaceWhenChange` | `boolean` | `true` | `Optional`. If `true`, history.replace() will be called, or history.push() will be called when query is updated by component. |
 | `mapDefaultQueryPropsToUrlWhenMount` | `boolean` | `false` | `Optional`. If `true`, default query props will be mapped to url when Component mounts. |
-| `queryPropTypes` | `object` | | Only properties declared in the queryPropTypes object will be mapped from the path to Component props, and the declared types will be used to decode the query string to Component props. |
+| `queryPropsConfig` | `object` | | Only properties declared in the queryPropTypes object will be mapped from the path to Component props, and the declared types will be used to decode the query string to Component props. |
 | `defaultQueryProps` | `object` | | Default query props, aka initial props. |
 | `validatorMap` | `object` | | `Optional`. ValidatorMap is a dictionary of properties validators. The key is a property name, and the value is an array of validator for this property. |
 
-### QueryPropTypes
+### queryPropsConfig
+The value of each key in `queryPropsConfig` can be a QueryPropType or a function.
+
+#### QueryPropTypes
 - number
 - string
 - boolean
