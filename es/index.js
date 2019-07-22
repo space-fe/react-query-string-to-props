@@ -247,11 +247,29 @@ var decodeString = function decodeString(str) {
 };
 var decodeNumericArray = function decodeNumericArray() {
   var arr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  if (!arr) {
+    return [];
+  } else if (!Array.isArray(arr)) {
+    return [decodeNumber(arr)];
+  }
+
   return arr.map(function (item) {
     return decodeNumber(item);
   });
 };
-var Decoders = (_Decoders = {}, _defineProperty(_Decoders, QueryPropTypes.boolean, decodeBoolean), _defineProperty(_Decoders, QueryPropTypes.number, decodeNumber), _defineProperty(_Decoders, QueryPropTypes.string, decodeString), _defineProperty(_Decoders, QueryPropTypes.numericArray, decodeNumericArray), _Decoders);
+var decodeArray = function decodeArray() {
+  var arr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  if (!arr) {
+    return [];
+  } else if (!Array.isArray(arr)) {
+    return [arr];
+  }
+
+  return arr;
+};
+var Decoders = (_Decoders = {}, _defineProperty(_Decoders, QueryPropTypes.boolean, decodeBoolean), _defineProperty(_Decoders, QueryPropTypes.number, decodeNumber), _defineProperty(_Decoders, QueryPropTypes.string, decodeString), _defineProperty(_Decoders, QueryPropTypes.numericArray, decodeNumericArray), _defineProperty(_Decoders, QueryPropTypes.array, decodeArray), _Decoders);
 var decode = function decode(type, encodedValue, defaultValue) {
   if (typeof type === 'function') {
     return type(encodedValue);
