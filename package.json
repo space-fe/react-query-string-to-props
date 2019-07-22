@@ -1,6 +1,6 @@
 {
   "name": "react-query-string-to-props",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Mapping query string from url to Component props seamlessly.",
   "main": "es/index.js",
   "module": "es/index.js",
@@ -10,7 +10,7 @@
     "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
     "build:types": "tsc --emitDeclarationOnly",
     "build": "rollup -c",
-    "release:patch": "yarn build  && yarn version --patch && yarn publish && git push --follow-tags",
+    "release:patch": "yarn build && yarn version --patch && yarn publish && git push --follow-tags",
     "release:minor": "yarn build && yarn version --minor && yarn publish && git push --follow-tags",
     "release:major": "yarn build && yarn version --major && yarn publish && git push --follow-tags"
   },
