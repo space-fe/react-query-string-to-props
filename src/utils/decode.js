@@ -33,14 +33,30 @@ export const decodeString = str => {
 }
 
 export const decodeNumericArray = (arr = []) => {
+  if (!arr) {
+    return []
+  } else if (!Array.isArray(arr)) {
+    return [decodeNumber(arr)]
+  }
   return arr.map(item => decodeNumber(item))
+}
+
+export const decodeArray = (arr = []) => {
+  if (!arr) {
+    return []
+  } else if (!Array.isArray(arr)) {
+    return [arr]
+  }
+
+  return arr
 }
 
 export const Decoders = {
   [QueryPropTypes.boolean]: decodeBoolean,
   [QueryPropTypes.number]: decodeNumber,
   [QueryPropTypes.string]: decodeString,
-  [QueryPropTypes.numericArray]: decodeNumericArray
+  [QueryPropTypes.numericArray]: decodeNumericArray,
+  [QueryPropTypes.array]: decodeArray
 }
 
 export const decode = (type, encodedValue, defaultValue) => {

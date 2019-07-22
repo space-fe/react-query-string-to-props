@@ -23,8 +23,7 @@ class Demo extends React.PureComponent {
   changeNumericArray = () => {
     this.props.updateQueryState({
       numericArr: [
-        getRandomNum(10, 1),
-        getRandomNum(20, 1)
+        getRandomNum(10, 1)
       ]
     })
   }
@@ -32,8 +31,7 @@ class Demo extends React.PureComponent {
   changeStringArray = () => {
     this.props.updateQueryState({
       stringArr: [
-        String(getRandomNum(10, 1)),
-        String(getRandomNum(20, 1))
+        String(getRandomNum(10, 1))
       ]
     })
   }
@@ -91,8 +89,8 @@ export default queryToPropsHOC(Demo, {
   defaultQueryProps: {
     num: 50,
     inputStr: 'abc',
-    numericArr: [1, 2],
-    stringArr: ['1', '2'],
+    numericArr: [],
+    stringArr: [],
     bool: false
   },
   validatorMap: {
