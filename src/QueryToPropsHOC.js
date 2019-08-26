@@ -10,10 +10,10 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
   const isReactComponent = DecoratedComponent.prototype && DecoratedComponent.prototype.isReactComponent
 
   const {
+    history,
     queryPropsConfig,
     defaultQueryProps,
     validatorMap,
-    history,
     replaceRouteWhenChange = true,
     mapDefaultQueryPropsToUrlWhenMounted = false
   } = config
@@ -31,20 +31,36 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
   class queryToPropsComponent extends React.PureComponent {
     static displayName = `QueryToProp(${componentName})`
 
-    state = { ...defaultState }
+    constructor (props) {
+      super(props)
+      this.__firstCallHandleRouteChanged = false
 
-    __firstCallHandleRouteChanged = false
-
-    currentLocation = null
+      const validatedQueryObj = this.__getValidatedQueryObj()
+      this.state = { ...defaultState, ...validatedQueryObj }
+    }
 
     __getCurrentQueryObj = () => {
-      return this.currentLocation
-        ? queryString.parse(this.currentLocation.search, { arrayFormat: 'comma' })
+      const { location } = this.props
+
+      return location
+        ? queryString.parse(location.search, { arrayFormat: 'comma' })
         : {}
     }
 
     __getQueryStr = (queryObj) => {
       return queryString.stringify(queryObj, { arrayFormat: 'comma' })
+    }
+
+    __getValidatedQueryObj = () => {
+      const currentQueryObj = this.__getCurrentQueryObj()
+
+      const filterKeys = Object.keys(queryPropsConfig)
+      const filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState, filterKeys)
+
+      const decodedQueryObj = decodeObj(filterQueryObj, queryPropsConfig)
+      const validatedQueryObj = validateObject(decodedQueryObj, defaultState, validatorMap)
+
+      return validatedQueryObj
     }
 
     __updateUrl = (validatedState) => {
@@ -54,7 +70,7 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
       }
 
       const queryStr = this.__getQueryStr(newQueryObj)
-      const { pathname } = this.currentLocation
+      const { pathname } = this.props.location
       const newPath = `${pathname}${queryStr ? `?${queryStr}` : ''}`
 
       replaceRouteWhenChange ? history.replace(newPath) : history.push(newPath)
@@ -75,14 +91,7 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
     }
 
     handleRouteChanged = (_, currLocation) => {
-      this.currentLocation = currLocation
-
-      const currentQueryObj = this.__getCurrentQueryObj()
-      const filterKeys = Object.keys(queryPropsConfig)
-      const filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState, filterKeys)
-
-      const decodedQueryObj = decodeObj(filterQueryObj, queryPropsConfig)
-      const validatedQueryObj = validateObject(decodedQueryObj, defaultState, validatorMap)
+      const validatedQueryObj = this.__getValidatedQueryObj()
       this.setState({ ...validatedQueryObj })
 
       if (!this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMounted) {

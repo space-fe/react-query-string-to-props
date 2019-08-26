@@ -1,5 +1,6 @@
 import React from 'react'
-import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-string-to-props'
+// import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-string-to-props'
+import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from '../src'
 import history from '../history'
 import './style.css'
 
@@ -40,6 +41,10 @@ class Demo extends React.PureComponent {
     this.props.updateQueryState({
       bool: !this.props.bool
     })
+  }
+
+  componentDidMount () {
+    console.log('class component did mount props => ', this.props)
   }
 
   render () {
