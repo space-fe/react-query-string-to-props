@@ -73,6 +73,7 @@
   },
   "dependencies": {
     "query-string": "^6.7.0",
+    "ramda": "^0.26.1",
     "react-onroutechanged": "^1.0.0-beta.1"
   }
 }

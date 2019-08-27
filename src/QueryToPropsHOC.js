@@ -1,6 +1,8 @@
 import React from 'react'
 import onRouteChangedHOC from 'react-onroutechanged'
 import queryString from 'query-string'
+import * as R from 'ramda'
+
 import { validateObject } from './utils/validate'
 import { filterObjWithDefaultObj } from './utils/objectUtil'
 import { decodeObj } from './utils/decode'
@@ -34,16 +36,17 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
     constructor (props) {
       super(props)
       this.__firstCallHandleRouteChanged = false
+      this.currLocation = null
 
-      const validatedQueryObj = this.__getValidatedQueryObj()
+      const validatedQueryObj = this.__getValidatedQueryObj(props.location)
       this.state = { ...defaultState, ...validatedQueryObj }
     }
 
-    __getCurrentQueryObj = () => {
-      const { location } = this.props
+    __getLocationQueryObj = (location) => {
+      const currLocation = location || this.currLocation
 
-      return location
-        ? queryString.parse(location.search, { arrayFormat: 'comma' })
+      return currLocation
+        ? queryString.parse(currLocation.search, { arrayFormat: 'comma' })
         : {}
     }
 
@@ -51,8 +54,8 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
       return queryString.stringify(queryObj, { arrayFormat: 'comma' })
     }
 
-    __getValidatedQueryObj = () => {
-      const currentQueryObj = this.__getCurrentQueryObj()
+    __getValidatedQueryObj = (location) => {
+      const currentQueryObj = this.__getLocationQueryObj(location)
 
       const filterKeys = Object.keys(queryPropsConfig)
       const filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState, filterKeys)
@@ -65,12 +68,12 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
 
     __updateUrl = (validatedState) => {
       const newQueryObj = {
-        ...this.__getCurrentQueryObj(),
+        ...this.__getLocationQueryObj(),
         ...validatedState
       }
 
       const queryStr = this.__getQueryStr(newQueryObj)
-      const { pathname } = this.props.location
+      const { pathname } = this.currLocation
       const newPath = `${pathname}${queryStr ? `?${queryStr}` : ''}`
 
       replaceRouteWhenChange ? history.replace(newPath) : history.push(newPath)
@@ -85,14 +88,20 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
       const validatedState = validateObject(newState, defaultState, validatorMap)
       this.__updateUrl(validatedState)
 
-      this.setState({ ...validatedState }, () => {
-        callback && callback()
-      })
+      // this.currLocation has not been changed at this time
+      const prevValidatedQueryObj = this.__getValidatedQueryObj()
+
+      if (!R.equals(prevValidatedQueryObj, validatedState)) {
+        this.setState({ ...validatedState }, () => {
+          callback && callback()
+        })
+      }
     }
 
-    handleRouteChanged = (_, currLocation) => {
+    handleRouteChanged = (prevLocation, currLocation) => {
+      this.currLocation = currLocation
+
       const validatedQueryObj = this.__getValidatedQueryObj()
-      this.setState({ ...validatedQueryObj })
 
       if (!this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMounted) {
         this.__updateUrl(validatedQueryObj)
