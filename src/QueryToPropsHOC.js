@@ -93,7 +93,7 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
 
       if (!R.equals(prevValidatedQueryObj, validatedState)) {
         this.setState({ ...validatedState }, () => {
-          callback && callback()
+          callback && callback(validatedState)
         })
       }
     }

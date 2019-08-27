@@ -1,6 +1,5 @@
 import React from 'react'
-// import queryToStateHOC, { QueryPropTypes } from 'react-query-string-to-props'
-import queryToStateHOC, { QueryPropTypes } from '../src'
+import queryToStateHOC, { QueryPropTypes } from 'react-query-string-to-props'
 import history from '../history'
 import './style.css'
 
@@ -25,7 +24,7 @@ function Demo (props) {
 
   React.useEffect(() => {
     console.log('functional component effect props => ', props)
-  }, [props])
+  }, [props.search, props.fnNum])
 
   return (
     <>

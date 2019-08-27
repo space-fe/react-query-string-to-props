@@ -121,8 +121,8 @@ cases('test utils filterObjWithDefaultObj', opts => {
     },
     filterKeys: ['key1', 'key2'],
     expectedResult: {
-      key1: true,
-      key2: false
+      key1: 'true',
+      key2: 'false'
     }
   }
 ])
