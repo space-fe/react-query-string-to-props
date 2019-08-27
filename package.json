@@ -4,6 +4,7 @@
   "description": "Mapping query string from url to Component props seamlessly.",
   "main": "es/index.js",
   "module": "es/index.js",
+  "types": "types/index",
   "scripts": {
     "test": "jest --collectCoverage",
     "lint": "eslint src/**/*.+\\(js\\|ts\\)*\\(x\\)",
