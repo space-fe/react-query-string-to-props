@@ -124,6 +124,19 @@ cases('test utils filterObjWithDefaultObj', opts => {
       key1: 'true',
       key2: 'false'
     }
+  },
+  {
+    name: 'When filterKeys is undefined',
+    obj: {
+      key1: 'true',
+      key2: 'false'
+    },
+    defaultObj: {
+      key1: 'defaultObj-key1',
+      key2: 'defaultObj-key2'
+    },
+    filterKeys: undefined,
+    expectedResult: {}
   }
 ])
 
@@ -192,6 +205,84 @@ cases('test utils decode', opts => {
     },
     expectedResult: {
       bool: true
+    }
+  },
+  {
+    name: 'Test disnormal numericArray',
+    obj: {
+      numericArr: null,
+      numericArr2: undefined
+    },
+    objTypes: {
+      numericArr: QueryPropTypes.numericArray,
+      numericArr2: QueryPropTypes.numericArray
+    },
+    expectedResult: {
+      numericArr: [],
+      numericArr2: []
+    }
+  },
+  {
+    name: 'Test when numericArray is not an array but a single value',
+    obj: {
+      numericArr: 'value'
+    },
+    objTypes: {
+      numericArr: QueryPropTypes.numericArray
+    },
+    expectedResult: {
+      numericArr: [undefined]
+    }
+  },
+  {
+    name: 'Test disnormal array',
+    obj: {
+      arr: null,
+      arr2: undefined
+    },
+    objTypes: {
+      arr: QueryPropTypes.array,
+      arr2: QueryPropTypes.array
+    },
+    expectedResult: {
+      arr: [],
+      arr2: []
+    }
+  },
+  {
+    name: 'Test when array is not an array but a single value',
+    obj: {
+      arr: 'value'
+    },
+    objTypes: {
+      arr: QueryPropTypes.array
+    },
+    expectedResult: {
+      arr: ['value']
+    }
+  },
+  {
+    name: 'Test when decode type is function',
+    obj: {
+      num: 10
+    },
+    objTypes: {
+      num: value => value * 2
+    },
+    expectedResult: {
+      num: 20
+    }
+  },
+  {
+    name: 'Test when decode type is invalid',
+    obj: {
+      num: 10
+    },
+    objTypes: {
+      num: 'invalid type'
+    },
+    expectedResult: {
+      num: 10
     }
   }
 ])
