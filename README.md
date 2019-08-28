@@ -24,7 +24,9 @@ import { createBrowserHistory } from 'history'
 class Searcher extends React.Component {
   handleChange = (event) => {
     const { updateQueryState } = this.props
-    updateQueryState({ searchStr: event.target.value })
+    updateQueryState({ searchStr: event.target.value }, queryObj => {
+      console.log(queryObj.searchStr)
+    })
   }
 
   render () {
@@ -163,6 +165,19 @@ export default class App extends React.Component {
     </React.Fragment>
   }
 }
+```
+
+## updateQueryState()
+After wrapping the `queryToPropsHOC`, the decorated Component will have a function property `updateQueryState`.
+### updateQueryState parameters
+- First parameter: new query key-value to be updated.
+- Second paramter: callback function with a new query object parameter.
+```javascript
+const { updateQueryState } = this.props
+updateQueryState({ searchStr: event.target.value }, (queryObj) => {
+  // do something
+  console.log(queryObj.searchStr)
+})
 ```
 
 ## Configuration
