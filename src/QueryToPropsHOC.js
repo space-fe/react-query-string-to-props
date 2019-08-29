@@ -1,7 +1,7 @@
 import React from 'react'
 import onRouteChangedHOC from 'react-onroutechanged'
 import queryString from 'query-string'
-import * as R from 'ramda'
+import deepEqual from 'fast-deep-equal'
 
 import { validateObject } from './utils/validate'
 import { filterObjWithDefaultObj } from './utils/objectUtil'
@@ -91,7 +91,7 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
       // this.currLocation has not been changed at this time
       const prevValidatedQueryObj = this.__getValidatedQueryObj()
 
-      if (!R.equals(prevValidatedQueryObj, validatedState)) {
+      if (!deepEqual(prevValidatedQueryObj, validatedState)) {
         this.setState({ ...validatedState }, () => {
           callback && callback(validatedState)
         })

@@ -1,5 +1,6 @@
 import React from 'react'
 import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-string-to-props'
+// import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from '../src'
 import history from '../history'
 import './style.css'
 

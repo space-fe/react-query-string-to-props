@@ -1,7 +1,7 @@
 import React from 'react';
 import onRouteChangedHOC from 'react-onroutechanged';
 import queryString from 'query-string';
-import { equals } from 'ramda';
+import deepEqual from 'fast-deep-equal';
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -363,7 +363,7 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
 
         var prevValidatedQueryObj = _this.__getValidatedQueryObj();
 
-        if (!equals(prevValidatedQueryObj, validatedState)) {
+        if (!deepEqual(prevValidatedQueryObj, validatedState)) {
           _this.setState(_objectSpread({}, validatedState), function () {
             callback && callback(validatedState);
           });
