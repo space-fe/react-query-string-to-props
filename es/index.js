@@ -1,6 +1,7 @@
 import React from 'react';
 import onRouteChangedHOC from 'react-onroutechanged';
 import queryString from 'query-string';
+import deepEqual from 'fast-deep-equal';
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -202,14 +203,10 @@ var validateObject = function validateObject(obj, defaultObj, validator) {
   return result;
 };
 
-var booleanConverter = function booleanConverter(v) {
-  return v === 'true' ? true : v === 'false' ? false : v;
-};
-
 var filterObjWithDefaultObj = function filterObjWithDefaultObj(obj, defaultObj) {
   var filterKeys = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
   return filterKeys.reduce(function (prev, key) {
-    return Object.prototype.hasOwnProperty.call(obj, key) ? _objectSpread({}, prev, _defineProperty({}, key, booleanConverter(obj[key]))) : _objectSpread({}, prev, _defineProperty({}, key, defaultObj[key]));
+    return Object.prototype.hasOwnProperty.call(obj, key) ? _objectSpread({}, prev, _defineProperty({}, key, obj[key])) : _objectSpread({}, prev, _defineProperty({}, key, defaultObj[key]));
   }, {});
 };
 
@@ -292,10 +289,10 @@ var decodeObj = function decodeObj(obj, objTypes) {
 var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
   var componentName = DecoratedComponent.displayName || DecoratedComponent.name || 'Component';
   var isReactComponent = DecoratedComponent.prototype && DecoratedComponent.prototype.isReactComponent;
-  var queryPropsConfig = config.queryPropsConfig,
+  var history = config.history,
+      queryPropsConfig = config.queryPropsConfig,
       defaultQueryProps = config.defaultQueryProps,
       validatorMap = config.validatorMap,
-      history = config.history,
       _config$replaceRouteW = config.replaceRouteWhenChange,
       replaceRouteWhenChange = _config$replaceRouteW === void 0 ? true : _config$replaceRouteW,
       _config$mapDefaultQue = config.mapDefaultQueryPropsToUrlWhenMounted,
@@ -316,27 +313,16 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
   function (_React$PureComponent) {
     _inherits(queryToPropsComponent, _React$PureComponent);
 
-    function queryToPropsComponent() {
-      var _getPrototypeOf2;
-
+    function queryToPropsComponent(props) {
       var _this;
 
       _classCallCheck(this, queryToPropsComponent);
 
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(queryToPropsComponent).call(this, props));
 
-      _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(queryToPropsComponent)).call.apply(_getPrototypeOf2, [this].concat(args)));
-
-      _defineProperty(_assertThisInitialized(_this), "state", _objectSpread({}, defaultState));
-
-      _defineProperty(_assertThisInitialized(_this), "__firstCallHandleRouteChanged", false);
-
-      _defineProperty(_assertThisInitialized(_this), "currentLocation", null);
-
-      _defineProperty(_assertThisInitialized(_this), "__getCurrentQueryObj", function () {
-        return _this.currentLocation ? queryString.parse(_this.currentLocation.search, {
+      _defineProperty(_assertThisInitialized(_this), "__getLocationQueryObj", function (location) {
+        var currLocation = location || _this.currLocation;
+        return currLocation ? queryString.parse(currLocation.search, {
           arrayFormat: 'comma'
         }) : {};
       });
@@ -347,12 +333,22 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
         });
       });
 
+      _defineProperty(_assertThisInitialized(_this), "__getValidatedQueryObj", function (location) {
+        var currentQueryObj = _this.__getLocationQueryObj(location);
+
+        var filterKeys = Object.keys(queryPropsConfig);
+        var filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState, filterKeys);
+        var decodedQueryObj = decodeObj(filterQueryObj, queryPropsConfig);
+        var validatedQueryObj = validateObject(decodedQueryObj, defaultState, validatorMap);
+        return validatedQueryObj;
+      });
+
       _defineProperty(_assertThisInitialized(_this), "__updateUrl", function (validatedState) {
-        var newQueryObj = _objectSpread({}, _this.__getCurrentQueryObj(), validatedState);
+        var newQueryObj = _objectSpread({}, _this.__getLocationQueryObj(), validatedState);
 
         var queryStr = _this.__getQueryStr(newQueryObj);
 
-        var pathname = _this.currentLocation.pathname;
+        var pathname = _this.currLocation.pathname;
         var newPath = "".concat(pathname).concat(queryStr ? "?".concat(queryStr) : '');
         replaceRouteWhenChange ? history.replace(newPath) : history.push(newPath);
       });
@@ -362,24 +358,22 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
 
         var validatedState = validateObject(newState, defaultState, validatorMap);
 
-        _this.__updateUrl(validatedState);
+        _this.__updateUrl(validatedState); // this.currLocation has not been changed at this time
 
-        _this.setState(_objectSpread({}, validatedState), function () {
-          callback && callback();
-        });
+
+        var prevValidatedQueryObj = _this.__getValidatedQueryObj();
+
+        if (!deepEqual(prevValidatedQueryObj, validatedState)) {
+          _this.setState(_objectSpread({}, validatedState), function () {
+            callback && callback(validatedState);
+          });
+        }
       });
 
-      _defineProperty(_assertThisInitialized(_this), "handleRouteChanged", function (_, currLocation) {
-        _this.currentLocation = currLocation;
+      _defineProperty(_assertThisInitialized(_this), "handleRouteChanged", function (prevLocation, currLocation) {
+        _this.currLocation = currLocation;
 
-        var currentQueryObj = _this.__getCurrentQueryObj();
-
-        var filterKeys = Object.keys(queryPropsConfig);
-        var filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState, filterKeys);
-        var decodedQueryObj = decodeObj(filterQueryObj, queryPropsConfig);
-        var validatedQueryObj = validateObject(decodedQueryObj, defaultState, validatorMap);
-
-        _this.setState(_objectSpread({}, validatedQueryObj));
+        var validatedQueryObj = _this.__getValidatedQueryObj();
 
         if (!_this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMounted) {
           _this.__updateUrl(validatedQueryObj);
@@ -388,6 +382,12 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
         _this.__firstCallHandleRouteChanged = true;
       });
 
+      _this.__firstCallHandleRouteChanged = false;
+      _this.currLocation = null;
+
+      var _validatedQueryObj = _this.__getValidatedQueryObj(props.location);
+
+      _this.state = _objectSpread({}, defaultState, _validatedQueryObj);
       return _this;
     }
 

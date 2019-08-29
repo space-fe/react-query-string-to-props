@@ -110,8 +110,8 @@ cases('test queryToPropsHOC', opts => {
     },
     locationChangingPath: [l1, l2],
     expectedStates: [
-      { searchStr1: 'l2-str1' },
-      { searchStr2: 'l2-str2' }
+      { searchStr1: 'initstr1' },
+      { searchStr2: 'initstr2' }
     ]
   },
   {
@@ -208,8 +208,8 @@ cases('test queryToPropsHOC', opts => {
     },
     locationChangingPath: [l2, l3],
     expectedStates: [
-      { searchStr1: 'l3-str1' },
-      { searchStr2: 'l3-str2', name: 'momo' }
+      { searchStr1: 'initstr1' },
+      { searchStr2: 'initstr2', name: 'mo' }
     ]
   },
   {

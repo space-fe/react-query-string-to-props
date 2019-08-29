@@ -1,6 +1,8 @@
 import React from 'react'
 import onRouteChangedHOC from 'react-onroutechanged'
 import queryString from 'query-string'
+import deepEqual from 'fast-deep-equal'
+
 import { validateObject } from './utils/validate'
 import { filterObjWithDefaultObj } from './utils/objectUtil'
 import { decodeObj } from './utils/decode'
@@ -10,10 +12,10 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
   const isReactComponent = DecoratedComponent.prototype && DecoratedComponent.prototype.isReactComponent
 
   const {
+    history,
     queryPropsConfig,
     defaultQueryProps,
     validatorMap,
-    history,
     replaceRouteWhenChange = true,
     mapDefaultQueryPropsToUrlWhenMounted = false
   } = config
@@ -31,15 +33,20 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
   class queryToPropsComponent extends React.PureComponent {
     static displayName = `QueryToProp(${componentName})`
 
-    state = { ...defaultState }
+    constructor (props) {
+      super(props)
+      this.__firstCallHandleRouteChanged = false
+      this.currLocation = null
 
-    __firstCallHandleRouteChanged = false
+      const validatedQueryObj = this.__getValidatedQueryObj(props.location)
+      this.state = { ...defaultState, ...validatedQueryObj }
+    }
 
-    currentLocation = null
+    __getLocationQueryObj = (location) => {
+      const currLocation = location || this.currLocation
 
-    __getCurrentQueryObj = () => {
-      return this.currentLocation
-        ? queryString.parse(this.currentLocation.search, { arrayFormat: 'comma' })
+      return currLocation
+        ? queryString.parse(currLocation.search, { arrayFormat: 'comma' })
         : {}
     }
 
@@ -47,14 +54,26 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
       return queryString.stringify(queryObj, { arrayFormat: 'comma' })
     }
 
+    __getValidatedQueryObj = (location) => {
+      const currentQueryObj = this.__getLocationQueryObj(location)
+
+      const filterKeys = Object.keys(queryPropsConfig)
+      const filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState, filterKeys)
+
+      const decodedQueryObj = decodeObj(filterQueryObj, queryPropsConfig)
+      const validatedQueryObj = validateObject(decodedQueryObj, defaultState, validatorMap)
+
+      return validatedQueryObj
+    }
+
     __updateUrl = (validatedState) => {
       const newQueryObj = {
-        ...this.__getCurrentQueryObj(),
+        ...this.__getLocationQueryObj(),
         ...validatedState
       }
 
       const queryStr = this.__getQueryStr(newQueryObj)
-      const { pathname } = this.currentLocation
+      const { pathname } = this.currLocation
       const newPath = `${pathname}${queryStr ? `?${queryStr}` : ''}`
 
       replaceRouteWhenChange ? history.replace(newPath) : history.push(newPath)
@@ -69,21 +88,20 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
       const validatedState = validateObject(newState, defaultState, validatorMap)
       this.__updateUrl(validatedState)
 
-      this.setState({ ...validatedState }, () => {
-        callback && callback()
-      })
+      // this.currLocation has not been changed at this time
+      const prevValidatedQueryObj = this.__getValidatedQueryObj()
+
+      if (!deepEqual(prevValidatedQueryObj, validatedState)) {
+        this.setState({ ...validatedState }, () => {
+          callback && callback(validatedState)
+        })
+      }
     }
 
-    handleRouteChanged = (_, currLocation) => {
-      this.currentLocation = currLocation
+    handleRouteChanged = (prevLocation, currLocation) => {
+      this.currLocation = currLocation
 
-      const currentQueryObj = this.__getCurrentQueryObj()
-      const filterKeys = Object.keys(queryPropsConfig)
-      const filterQueryObj = filterObjWithDefaultObj(currentQueryObj, defaultState, filterKeys)
-
-      const decodedQueryObj = decodeObj(filterQueryObj, queryPropsConfig)
-      const validatedQueryObj = validateObject(decodedQueryObj, defaultState, validatorMap)
-      this.setState({ ...validatedQueryObj })
+      const validatedQueryObj = this.__getValidatedQueryObj()
 
       if (!this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMounted) {
         this.__updateUrl(validatedQueryObj)

@@ -1,9 +1,10 @@
 {
   "name": "react-query-string-to-props",
-  "version": "1.0.3",
+  "version": "1.0.5-beta.0",
   "description": "Mapping query string from url to Component props seamlessly.",
   "main": "es/index.js",
   "module": "es/index.js",
+  "types": "types/index",
   "scripts": {
     "test": "jest --collectCoverage",
     "lint": "eslint src/**/*.+\\(js\\|ts\\)*\\(x\\)",
@@ -56,6 +57,7 @@
     "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-react": "^7.13.0",
     "eslint-plugin-standard": "^4.0.0",
+    "fs-extra": "^8.1.0",
     "history": "^4.9.0",
     "jest": "^24.8.0",
     "jest-environment-enzyme": "^7.0.2",
@@ -71,6 +73,7 @@
     "react": "^16.8.6"
   },
   "dependencies": {
+    "fast-deep-equal": "^3.0.0-beta.1",
     "query-string": "^6.7.0",
     "react-onroutechanged": "^1.0.0-beta.1"
   }
