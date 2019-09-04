@@ -1,6 +1,6 @@
 {
   "name": "react-query-string-to-props",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Mapping query string from url to Component props seamlessly.",
   "main": "es/index.js",
   "module": "es/index.js",
