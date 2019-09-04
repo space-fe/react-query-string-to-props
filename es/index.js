@@ -378,8 +378,6 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
 
         var prevValidatedQueryObj = _this.__getValidatedQueryObj();
 
-        console.log('prevValidatedQueryObj', prevValidatedQueryObj);
-
         if (!deepEqual(prevValidatedQueryObj, validatedState)) {
           _this.setState(_objectSpread2({}, validatedState), function () {
             callback && callback(validatedState);
@@ -390,8 +388,9 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
       _defineProperty(_assertThisInitialized(_this), "handleRouteChanged", function (prevLocation, currLocation) {
         _this.currLocation = currLocation;
 
-        var validatedQueryObj = _this.__getValidatedQueryObj(currLocation); // this.setState({ ...this.state, ...validatedQueryObj })
+        var validatedQueryObj = _this.__getValidatedQueryObj(currLocation);
 
+        _this.setState(_objectSpread2({}, _this.state, {}, validatedQueryObj));
 
         if (!_this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMounted) {
           _this.__updateUrl(validatedQueryObj);
