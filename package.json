@@ -1,6 +1,6 @@
 {
   "name": "react-query-string-to-props",
-  "version": "1.0.5-beta.0",
+  "version": "1.0.5",
   "description": "Mapping query string from url to Component props seamlessly.",
   "main": "es/index.js",
   "module": "es/index.js",
@@ -13,7 +13,8 @@
     "build": "rollup -c",
     "release:patch": "yarn build && yarn version --patch && yarn publish && git push --follow-tags",
     "release:minor": "yarn build && yarn version --minor && yarn publish && git push --follow-tags",
-    "release:major": "yarn build && yarn version --major && yarn publish && git push --follow-tags"
+    "release:major": "yarn build && yarn version --major && yarn publish && git push --follow-tags",
+    "example": "webpack-dev-server --mode development --config example/webpack.config.js"
   },
   "pre-commit": [
     "precommit-msg",
@@ -44,10 +45,12 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "babel-eslint": "^10.0.2",
     "babel-jest": "^24.8.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "eslint": "^5.16.0",
@@ -55,10 +58,11 @@
     "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.1.1",
-    "eslint-plugin-react": "^7.13.0",
+    "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-standard": "^4.0.0",
     "fs-extra": "^8.1.0",
     "history": "^4.9.0",
+    "html-webpack-plugin": "^3.2.0",
     "jest": "^24.8.0",
     "jest-environment-enzyme": "^7.0.2",
     "jest-enzyme": "^7.0.2",
@@ -66,8 +70,14 @@
     "pre-commit": "^1.2.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-hot-loader": "^4.12.12",
+    "react-router-dom": "^5.0.1",
     "rollup": "^1.16.3",
-    "rollup-plugin-babel": "^4.3.3"
+    "rollup-plugin-babel": "^4.3.3",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
   },
   "peerDependencies": {
     "react": "^16.8.6"

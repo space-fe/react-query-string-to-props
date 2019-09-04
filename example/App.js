@@ -4,7 +4,7 @@ import ClassComp from './components/classComp'
 import FunctionComp from './components/functionComp'
 import history from './history'
 
-function App() {
+function App () {
   return (
     <Router history={history}>
       <Route exact path='/'>
@@ -18,7 +18,7 @@ function App() {
         </div>
       </Route>
     </Router>
-  );
+  )
 }
 
 export default App

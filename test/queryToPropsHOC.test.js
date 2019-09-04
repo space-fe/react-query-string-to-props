@@ -85,7 +85,7 @@ cases('test queryToPropsHOC', opts => {
   expect(result2).toEqual(expectedState2)
 }, [
   {
-    name: 'When route changes, and no state updates',
+    name: 'When route changes, and state updates',
     config1: {
       queryPropsConfig: {
         searchStr1: QueryPropTypes.string
@@ -110,8 +110,8 @@ cases('test queryToPropsHOC', opts => {
     },
     locationChangingPath: [l1, l2],
     expectedStates: [
-      { searchStr1: 'initstr1' },
-      { searchStr2: 'initstr2' }
+      { searchStr1: 'l2-str1' },
+      { searchStr2: 'l2-str2' }
     ]
   },
   {
@@ -208,8 +208,8 @@ cases('test queryToPropsHOC', opts => {
     },
     locationChangingPath: [l2, l3],
     expectedStates: [
-      { searchStr1: 'initstr1' },
-      { searchStr2: 'initstr2', name: 'mo' }
+      { searchStr1: 'l3-str1' },
+      { searchStr2: 'l3-str2', name: 'momo' }
     ]
   },
   {
