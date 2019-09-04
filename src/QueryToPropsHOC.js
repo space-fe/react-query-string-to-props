@@ -101,7 +101,8 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
     handleRouteChanged = (prevLocation, currLocation) => {
       this.currLocation = currLocation
 
-      const validatedQueryObj = this.__getValidatedQueryObj()
+      const validatedQueryObj = this.__getValidatedQueryObj(currLocation)
+      this.setState({ ...this.state, ...validatedQueryObj })
 
       if (!this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMounted) {
         this.__updateUrl(validatedQueryObj)
