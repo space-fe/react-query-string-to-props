@@ -1,6 +1,7 @@
 import React from 'react'
-import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from 'react-query-string-to-props'
-// import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from '../src'
+import { withRouter } from 'react-router-dom'
+
+import queryToPropsHOC, { QueryPropTypes, ValidateTypes } from '../../src/index'
 import history from '../history'
 import './style.css'
 
@@ -18,6 +19,8 @@ class Demo extends React.PureComponent {
   changeString = (event) => {
     this.props.updateQueryState({
       inputStr: event.target.value
+    }, queryObj => {
+      console.log('===queryObj===', queryObj)
     })
   }
 
@@ -82,7 +85,7 @@ class Demo extends React.PureComponent {
   }
 }
 
-export default queryToPropsHOC(Demo, {
+export default queryToPropsHOC(withRouter(Demo), {
   history,
   queryPropsConfig: {
     num: QueryPropTypes.number,

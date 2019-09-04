@@ -1,43 +1,63 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const SOURCE_PATH = path.join(__dirname, 'src')
-
-module.exports = {
-  mode: 'development',
-  entry: './src/index.js',
+const config = {
+  devtool: 'source-map',
+  entry: {
+    'app': [
+      'react-hot-loader/patch',
+      './example/index.js'
+    ]
+  },
   output: {
-    path: path.resolve(__dirname, './build'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    chunkFilename: '[name].[chunkhash].js',
+    publicPath: '/'
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json']
+    alias: {
+      src: path.resolve(__dirname, '../src')
+    }
   },
   module: {
     rules: [{
-      test: /\.(js|ts)x?$/,
-      exclude: [
-        path.resolve(__dirname, 'build')
-      ],
-      include: [
-        path.resolve(__dirname, 'src')
-      ],
-      loader: 'babel-loader'
+      test: /\.js$/,
+      exclude: /node_modules/,
+      use: [{
+        loader: 'babel-loader',
+        options: {
+          presets: [
+            '@babel/preset-env', 
+            '@babel/preset-react'
+          ],
+          plugins: [
+            'react-hot-loader/babel'
+          ]
+        }
+      }]
     }, {
-      test: /\.css$/i,
-      use: ['style-loader', 'css-loader']
+      test: /\.css$/,
+      use: [
+        'style-loader',
+        'css-loader'
+      ]
     }]
   },
   plugins: [
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      template: path.join(SOURCE_PATH, 'index.tmpl.html'),
-      inject: 'body'
+      template: './example/index.html'
     })
   ],
   devServer: {
-    contentBase: path.join(__dirname, 'src'),
-    compress: true,
-    port: 9000,
-    historyApiFallback: true
+    hot: true,
+    progress: true,
+    historyApiFallback: true,
+    port: 3000
   }
 }
+
+module.exports = config
