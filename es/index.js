@@ -58,35 +58,20 @@ function _extends() {
   return _extends.apply(this, arguments);
 }
 
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
+function _objectSpread(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i] != null ? arguments[i] : {};
+    var ownKeys = Object.keys(source);
 
-    if (i % 2) {
-      ownKeys(source, true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(source).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
+    if (typeof Object.getOwnPropertySymbols === 'function') {
+      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+      }));
     }
+
+    ownKeys.forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    });
   }
 
   return target;
@@ -193,9 +178,9 @@ var validateMethods = (_validateMethods = {}, _defineProperty(_validateMethods, 
 }), _validateMethods);
 
 var validateObject = function validateObject(obj, defaultObj, validator) {
-  var result = _objectSpread2({}, obj);
+  var result = _objectSpread({}, obj);
 
-  var defaultValidator = _objectSpread2({}, validator);
+  var defaultValidator = _objectSpread({}, validator);
 
   Object.entries(defaultValidator).forEach(function (_ref) {
     var _ref2 = _slicedToArray(_ref, 2),
@@ -221,7 +206,7 @@ var validateObject = function validateObject(obj, defaultObj, validator) {
 var filterObjWithDefaultObj = function filterObjWithDefaultObj(obj, defaultObj) {
   var filterKeys = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
   return filterKeys.reduce(function (prev, key) {
-    return Object.prototype.hasOwnProperty.call(obj, key) ? _objectSpread2({}, prev, _defineProperty({}, key, obj[key])) : _objectSpread2({}, prev, _defineProperty({}, key, defaultObj[key]));
+    return Object.prototype.hasOwnProperty.call(obj, key) ? _objectSpread({}, prev, _defineProperty({}, key, obj[key])) : _objectSpread({}, prev, _defineProperty({}, key, defaultObj[key]));
   }, {});
 };
 
@@ -297,7 +282,7 @@ var decodeObj = function decodeObj(obj, objTypes) {
         key = _ref2[0],
         value = _ref2[1];
 
-    return _objectSpread2({}, prev, _defineProperty({}, key, decode(objTypes[key], value)));
+    return _objectSpread({}, prev, _defineProperty({}, key, decode(objTypes[key], value)));
   }, {});
 };
 
@@ -321,7 +306,7 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
     throw new Error('queryPropsConfig must be provided for configuration!');
   }
 
-  var defaultState = _objectSpread2({}, defaultQueryProps);
+  var defaultState = _objectSpread({}, defaultQueryProps);
 
   var queryToPropsComponent =
   /*#__PURE__*/
@@ -359,7 +344,7 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
       });
 
       _defineProperty(_assertThisInitialized(_this), "__updateUrl", function (validatedState) {
-        var newQueryObj = _objectSpread2({}, _this.__getLocationQueryObj(), {}, validatedState);
+        var newQueryObj = _objectSpread({}, _this.__getLocationQueryObj(), validatedState);
 
         var queryStr = _this.__getQueryStr(newQueryObj);
 
@@ -369,7 +354,7 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
       });
 
       _defineProperty(_assertThisInitialized(_this), "__updateState", function (patches, callback) {
-        var newState = _objectSpread2({}, _this.state, {}, patches);
+        var newState = _objectSpread({}, _this.state, patches);
 
         var validatedState = validateObject(newState, defaultState, validatorMap);
 
@@ -379,7 +364,7 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
         var prevValidatedQueryObj = _this.__getValidatedQueryObj();
 
         if (!deepEqual(prevValidatedQueryObj, validatedState)) {
-          _this.setState(_objectSpread2({}, validatedState), function () {
+          _this.setState(_objectSpread({}, validatedState), function () {
             callback && callback(validatedState);
           });
         }
@@ -390,7 +375,7 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
 
         var validatedQueryObj = _this.__getValidatedQueryObj(currLocation);
 
-        _this.setState(_objectSpread2({}, _this.state, {}, validatedQueryObj));
+        _this.setState(_objectSpread({}, _this.state, validatedQueryObj));
 
         if (!_this.__firstCallHandleRouteChanged && mapDefaultQueryPropsToUrlWhenMounted) {
           _this.__updateUrl(validatedQueryObj);
@@ -404,7 +389,7 @@ var queryToPropsHOC = function queryToPropsHOC(DecoratedComponent, config) {
 
       var _validatedQueryObj = _this.__getValidatedQueryObj(props.location);
 
-      _this.state = _objectSpread2({}, defaultState, {}, _validatedQueryObj);
+      _this.state = _objectSpread({}, defaultState, _validatedQueryObj);
       return _this;
     }
 

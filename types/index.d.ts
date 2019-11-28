@@ -1,42 +1,46 @@
 import * as React from 'react'
 import { History } from 'history'
 
+type PropValue = number | string | boolean | string[] | number[]
+type ValidatorValue = string[] | number[] | RegExp | ((val?: PropValue) => boolean)
+
+interface IValidator {
+  type: ValidateTypes
+  value: ValidatorValue
+}
+
 declare function queryToPropsHOC<T>(
   DecoratedComponent: React.ComponentType,
   config: {
     history: History
     queryPropsConfig: {
-      [key: string]: number | string | boolean | string[] | number[]
+      [key: string]: QueryPropTypes
     }
-    defaultQueryProps?: object
+    defaultQueryProps?: {
+      [key: string]: PropValue
+    },
     validatorMap?: {
-      [key: string]: []
+      [key: string]: IValidator[]
     }
     replaceRouteWhenChange?: boolean
     mapDefaultQueryPropsToUrlWhenMounted?: boolean
   }
 ): React.ComponentType<T>
 
-declare type QueryPropTypesType = {
-  number: string
-  string: string
-  array: string
-  boolean: string
-  numericArray: string
+declare enum QueryPropTypes {
+  number = 'number',
+  string = 'string',
+  array = 'array',
+  boolean = 'boolean',
+  numericArray = 'numericArray'
 }
 
-declare type ValidateTypesType = {
-  range: string
-  regexp: string
-  function: string
+declare enum ValidateTypes {
+  range = 'range',
+  regexp = 'regexp',
+  function = 'function'
 }
 
-declare const QueryPropTypes: QueryPropTypesType
-declare const ValidateTypes: ValidateTypesType
-
-export {
-  QueryPropTypes,
-  ValidateTypes
-}
+export { QueryPropTypes, ValidateTypes }
 
 export default queryToPropsHOC
