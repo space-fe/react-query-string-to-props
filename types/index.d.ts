@@ -9,23 +9,20 @@ interface IValidator {
   value: ValidatorValue
 }
 
-declare function queryToPropsHOC<T>(
-  DecoratedComponent: React.ComponentType,
-  config: {
-    history: History
-    queryPropsConfig: {
-      [key: string]: QueryPropTypes
-    }
-    defaultQueryProps?: {
-      [key: string]: PropValue
-    },
-    validatorMap?: {
-      [key: string]: IValidator[]
-    }
-    replaceRouteWhenChange?: boolean
-    mapDefaultQueryPropsToUrlWhenMounted?: boolean
-  }
-): React.ComponentType<T>
+interface IMap<T> {
+  [key: string]: T
+}
+
+interface IConfig {
+  history: History
+  queryPropsConfig: IMap<QueryPropTypes>
+  defaultQueryProps?: IMap<PropValue>
+  validatorMap?: IMap<IValidator[]>
+  replaceRouteWhenChange?: boolean
+  mapDefaultQueryPropsToUrlWhenMounted?: boolean
+}
+
+declare function queryToPropsHOC<T>(DecoratedComponent: React.ComponentType, config: IConfig): React.ComponentType<T>
 
 declare enum QueryPropTypes {
   number = 'number',
@@ -41,6 +38,6 @@ declare enum ValidateTypes {
   function = 'function'
 }
 
-export { QueryPropTypes, ValidateTypes }
+export { QueryPropTypes, ValidateTypes, IConfig }
 
 export default queryToPropsHOC
