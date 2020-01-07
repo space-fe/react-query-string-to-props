@@ -89,13 +89,15 @@ const queryToPropsHOC = (DecoratedComponent, config) => {
       const validatedState = validateObject(newState, defaultState, validatorMap)
       this.__updateUrl(validatedState)
 
-      const prevValidatedQueryObj = this.__getValidatedQueryObj(this.prevLocation)
+      setTimeout(() => {
+        const prevValidatedQueryObj = this.__getValidatedQueryObj(this.prevLocation)
 
-      if (!deepEqual(prevValidatedQueryObj, validatedState)) {
-        this.setState({ ...validatedState }, () => {
-          callback && callback(validatedState)
-        })
-      }
+        if (!deepEqual(prevValidatedQueryObj, validatedState)) {
+          this.setState({ ...validatedState }, () => {
+            callback && callback(validatedState)
+          })
+        }
+      }, 0)
     }
 
     handleRouteChanged = (prevLocation, currLocation) => {

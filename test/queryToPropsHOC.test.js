@@ -81,8 +81,10 @@ cases('test queryToPropsHOC', opts => {
     })
   }
 
-  expect(result1).toEqual(expectedState1)
-  expect(result2).toEqual(expectedState2)
+  setTimeout(() => {
+    expect(result1).toEqual(expectedState1)
+    expect(result2).toEqual(expectedState2)
+  }, 0)
 }, [
   {
     name: 'When route changes, and state updates',
